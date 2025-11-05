@@ -88,9 +88,9 @@ export default function BookServicePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#1e3a8a]">
+    <main className="min-h-screen bg-[#0D1117]">
       {/* Top bar */}
-      <header className="bg-[#1e40af] border-b border-[#3b82f6]">
+      {/* <header className="bg-[#0D1117] border-b border-[#3b82f6]">
         <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Wrench className="h-6 w-6 sm:h-7 sm:w-7 text-[#007BFF]" />
@@ -100,7 +100,7 @@ export default function BookServicePage() {
             <Badge className="bg-[#E3F2FD] text-[#007BFF] text-xs sm:text-sm">Secure booking</Badge>
           </div>
         </div>
-      </header>
+      </header> */}
 
       <section className="py-6 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-3 gap-6 lg:gap-8">
@@ -115,25 +115,22 @@ export default function BookServicePage() {
                 Back
               </button>
               <h1 className="mt-3 text-2xl sm:text-3xl font-bold text-white">
-                Book {service ? <span className="text-[#60a5fa]">{service}</span> : "a Service"}
+                Create Account
               </h1>
               <p className="text-[#cbd5e1] mt-2 text-sm sm:text-base">
-                Fill in the details below to get the best-matched professional.
+                Fill in the details below to get eligible for sevices
               </p>
             </div>
 
-            <Card className="border-0 shadow-xl bg-white">
+            <Card className="bg-black border-0 shadow-xl bg-white">
               <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-[#343A40] text-lg sm:text-xl">Service details</CardTitle>
-                <CardDescription className="text-[#6C757D] text-sm sm:text-base">
-                  Tell us what you need and when youre available.
-                </CardDescription>
+                <CardTitle className="text-[#343A40] text-lg sm:text-xl">Your details</CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
                 <form className="space-y-6 sm:space-y-8" onSubmit={onSubmit} noValidate>
                   {/* Service selection and date/time */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                    <div>
+                  {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"> */}
+                    {/* <div>
                       <Label htmlFor="service" className="text-[#343A40] text-sm sm:text-base">
                         Service needed *
                       </Label>
@@ -197,7 +194,7 @@ export default function BookServicePage() {
                   </div>
 
                   {/* Problem description */}
-                  <div>
+                  {/* <div>
                     <Label htmlFor="desc" className="text-[#343A40] text-sm sm:text-base">
                       Describe the problem (min 20 chars)
                     </Label>
@@ -215,7 +212,7 @@ export default function BookServicePage() {
                   </div>
 
                   {/* Budget and photos */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                       <Label htmlFor="budget" className="text-[#343A40] text-sm sm:text-base">
                         Estimated budget (optional)
@@ -240,7 +237,7 @@ export default function BookServicePage() {
                         <input type="file" accept="image/*" multiple className="hidden" />
                       </div>
                     </div>
-                  </div>
+                  </div> */} 
 
                   {/* Contact and address */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -339,25 +336,6 @@ export default function BookServicePage() {
                     </div>
                   </div>
 
-                  {/* Consent */}
-                  <div className="bg-[#E3F2FD] p-3 sm:p-4 rounded-xl">
-                    <div className="flex items-start gap-3">
-                      <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-[#007BFF] mt-0.5 flex-shrink-0" />
-                      <div className="text-xs sm:text-sm text-[#343A40]">
-                        <p className="font-medium mb-1">Privacy & Terms</p>
-                        <p>
-                          Your details are used to process this booking request. By submitting, you agree to be
-                          contacted by FixMate and our verified professionals regarding your request.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 mt-3">
-                      <Checkbox id="agree" checked={agree} onCheckedChange={() => setAgree(Boolean())} />
-                      <Label htmlFor="agree" className="text-[#343A40] text-xs sm:text-sm">
-                        I agree to the Terms and Privacy Policy *
-                      </Label>
-                    </div>
-                  </div>
 
                   {/* Actions */}
                   {error && (
@@ -375,7 +353,7 @@ export default function BookServicePage() {
                       disabled={isSubmitting}
                       className="h-11 sm:h-12 rounded-xl bg-[#00C49A] hover:bg-[#00B894] text-white text-sm sm:text-base font-medium"
                     >
-                      {isSubmitting ? "Submitting..." : "Submit Request"}
+                      {isSubmitting ? "Creating..." : "Create"}
                     </Button>
                     <Button
                       type="button"
@@ -391,42 +369,6 @@ export default function BookServicePage() {
             </Card>
           </div>
 
-          {/* Summary */}
-          <div className="lg:col-span-1">
-            <Card className="border-0 shadow-lg bg-white sticky top-6">
-              <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-[#343A40] text-lg sm:text-xl">Booking summary</CardTitle>
-                <CardDescription className="text-[#6C757D] text-sm sm:text-base">
-                  Review your selections before submitting.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6">
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-[#6C757D]">Service</span>
-                  <span className="font-medium text-[#343A40]">{service || "—"}</span>
-                </div>
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-[#6C757D]">Preferred date</span>
-                  <span className="font-medium text-[#343A40]">{date || "—"}</span>
-                </div>
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-[#6C757D]">Time window</span>
-                  <span className="font-medium text-[#343A40]">
-                    {timeWindow === "any" ? "Anytime" : timeWindow.replace("-", "–")}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-[#6C757D]">Urgent</span>
-                  <span className="font-medium text-[#343A40]">{urgent ? "Yes" : "No"}</span>
-                </div>
-                <div className="border-t pt-3 sm:pt-4">
-                  <p className="text-xs sm:text-sm text-[#6C757D]">
-                    After submission, you will get updates via SMS/Email with pro details and ETA.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </section>
     </main>

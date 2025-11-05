@@ -3,7 +3,11 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap", // optional, keeps text visible
+  adjustFontFallback: false, // helps avoid network fetch errors
+});
 
 export const metadata: Metadata = {
   title: 'FixMate - On-Demand Home Services',
@@ -21,7 +25,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="FixMate" />
+        <meta name="apple-mobile-web-app-title" content="Nexcyn" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

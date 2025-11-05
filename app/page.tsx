@@ -30,9 +30,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import CardNav, { CardNavItem } from "@/components/CardNav";
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useRouter();
 
   const services = [
     {
@@ -102,6 +104,44 @@ export default function HomePage() {
       description: "100% satisfaction or money back guarantee",
     },
   ];
+  const items: CardNavItem[] = [
+    {
+      label: "About",
+      bgColor: "#0D0716",
+      textColor: "#fff",
+      links: [
+        { label: "Company", href: "/about", ariaLabel: "About Company" },
+        { label: "Careers", href: "/careers", ariaLabel: "About Careers" },
+      ],
+    },
+    {
+      label: "Projects",
+      bgColor: "#170D27",
+      textColor: "#fff",
+      links: [
+        {
+          label: "Featured",
+          href: "/features",
+          ariaLabel: "Featured Projects",
+        },
+        {
+          label: "Case Studies",
+          href: "/Projects",
+          ariaLabel: "Project Case Studies",
+        },
+      ],
+    },
+    {
+      label: "Contact",
+      bgColor: "#271E37",
+      textColor: "#fff",
+      links: [
+        { label: "Email", href: "/email", ariaLabel: "Email us" },
+        { label: "Twitter", href: "/twitter", ariaLabel: "Twitter" },
+        { label: "LinkedIn", href: "/linkedin", ariaLabel: "LinkedIn" },
+      ],
+    },
+  ];
 
   function slugify(name: string) {
     return name
@@ -114,149 +154,61 @@ export default function HomePage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[#1e3a8a]">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Header */}
-      <header className="bg-[#1e40af] shadow-sm border-b border-[#3b82f6] sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <Wrench className="h-6 w-6 sm:h-8 sm:w-8 text-[#007BFF]" />
-              <span className="text-xl sm:text-2xl font-bold text-white">
-                FixMate
-              </span>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <CardNav
+            items={items}
+            baseColor="rgba(235, 222, 222, 0.05)"
+            menuColor="#0e0c0cff"
+            buttonBgColor="#111"
+            buttonTextColor="#fff"
+            ease="power3.out"
+            showSearch={true}
+            onSearch={(query) => console.log("Search for:", query)}
+            navButtons={[
+              {
+                label: "STARTED",
+                href: "/login",
+                bgColor: "#832386ff",
+              },
+            ]}
+          />
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-6 lg:space-x-8">
-              <a
-                href="#services"
-                className="text-white hover:text-[#60a5fa] font-medium transition-colors"
-              >
-                Services
-              </a>
-              <a
-                href="#how-it-works"
-                className="text-white hover:text-[#60a5fa] font-medium transition-colors"
-              >
-                How it Works
-              </a>
-              <a
-                href="#about"
-                className="text-white hover:text-[#60a5fa] font-medium transition-colors"
-              >
-                About
-              </a>
-              <a
-                href="#contact"
-                className="text-white hover:text-[#60a5fa] font-medium transition-colors"
-              >
-                Contact
-              </a>
-            </nav>
-
-            {/* Desktop Buttons */}
-            <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
-              <Button
-                variant="ghost"
-                asChild
-                className="text-[#60a5fa] hover:text-[#93c5fd] hover:bg-[#1e40af] transition-colors"
-              >
-                <Link href="/login">Sign In</Link>
-              </Button>
-              <Button
-                asChild
-                className="bg-[#00C49A] hover:bg-[#00B894] transition-colors"
-              >
-                <Link href="/get-started">Get Started</Link>
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2 rounded-lg text-white hover:bg-[#1e40af] transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle mobile menu"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden border-t border-[#3b82f6] bg-[#1e40af]">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                <a
-                  href="#services"
-                  className="block px-3 py-2 text-white hover:text-[#60a5fa] hover:bg-[#1e3a8a] rounded-md transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Services
-                </a>
-                <a
-                  href="#how-it-works"
-                  className="block px-3 py-2 text-white hover:text-[#60a5fa] hover:bg-[#1e3a8a] rounded-md transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  How it Works
-                </a>
-                <a
-                  href="#about"
-                  className="block px-3 py-2 text-white hover:text-[#60a5fa] hover:bg-[#1e3a8a] rounded-md transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  About
-                </a>
-                <a
-                  href="#contact"
-                  className="block px-3 py-2 text-white hover:text-[#60a5fa] hover:bg-[#1e3a8a] rounded-md transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Contact
-                </a>
-                <div className="flex flex-col space-y-2 pt-4 border-t border-[#3b82f6]">
-                  <Button
-                    variant="ghost"
-                    asChild
-                    className="text-[#60a5fa] hover:text-[#93c5fd] hover:bg-[#1e3a8a] justify-start"
-                  >
-                    <Link
-                      href="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign In
-                    </Link>
-                  </Button>
-                  <Button asChild className="bg-[#00C49A] hover:bg-[#00B894]">
-                    <Link
-                      href="/get-started"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Get Started
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-lg text-white hover:bg-[#1e40af] transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
         </div>
-      </header>
+
+        {/* Mobile Navigation */}
+      </div>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#1e3a8a] to-[#1e40af] py-12 sm:py-16 lg:py-20">
+      <section className="bg-gradient-to-br from-[#0F172A] to-[#0F172A] py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="text-center lg:text-left">
-              <Badge className="mb-4 bg-[#E3F2FD] text-[#007BFF] hover:bg-[#E3F2FD] text-xs sm:text-sm">
-                Trusted by 10,000+ customers
-              </Badge>
+              <div className="flex items-center space-x-2">
+                <Wrench className="h-6 w-6 sm:h-8 sm:w-8 text-[#007BFF]" />
+                <span className="text-xl sm:text-5xl font-bold text-white">
+                  Nexcyn
+                </span>
+              </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                 Your Home Services,
                 <span className="text-[#60a5fa]"> On-Demand</span>
               </h1>
+
               <p className="text-lg sm:text-xl text-[#cbd5e1] mb-6 sm:mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                 Book trusted local professionals for all your repair and
                 maintenance needs. From plumbing to electronics, we have got you
@@ -270,6 +222,7 @@ export default function HomePage() {
                     className="pl-9 sm:pl-10 h-11 sm:h-12 text-base sm:text-lg rounded-xl border-2 border-gray-200 focus:border-[#007BFF] bg-white"
                   />
                 </div>
+
                 <Button
                   size="lg"
                   className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-[#00C49A] hover:bg-[#00B894] text-sm sm:text-base"
@@ -289,6 +242,10 @@ export default function HomePage() {
                 <div className="flex items-center space-x-1">
                   <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-blue-400" />
                   <span>Same Day Service</span>
+
+                  <Badge className="mb-4 bg-[#E3F2FD] text-[#007BFF] hover:bg-[#E3F2FD] text-xs sm:text-sm">
+                    Trusted by 10,000+ customers
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -297,13 +254,15 @@ export default function HomePage() {
                 <Image
                   src="/home-repair-technician.png"
                   alt="Professional technician"
+                  width={800}
+                  height={600}
                   className="w-full h-60 sm:h-72 lg:h-80 object-cover rounded-xl"
                 />
               </div>
               <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 bg-blue-600 text-white p-3 sm:p-4 rounded-xl shadow-lg">
-                <div className="text-xl sm:text-2xl font-bold">2hrs</div>
+                {/* <div className="text-xl sm:text-2xl font-bold">2hrs</div> */}
                 <div className="text-xs sm:text-sm opacity-90">
-                  Avg Response
+                  Quick Response
                 </div>
               </div>
             </div>
@@ -312,7 +271,7 @@ export default function HomePage() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-12 sm:py-16 lg:py-20 bg-[#1e40af]">
+      <section id="services" className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -325,18 +284,17 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {services.map((service, index) => {
-              const slug = slugify(service.name);
               return (
                 <Card
                   key={index}
                   className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md hover:-translate-y-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#007BFF] bg-white touch-manipulation"
                   role="link"
                   tabIndex={0}
-                  onClick={() => router.push(`/book/${slug}`)}
+                  onClick={() => router.push(`/login`)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
-                      router.push(`/book/${slug}`);
+                      router.push(`/login`);
                     }
                   }}
                 >
@@ -358,12 +316,7 @@ export default function HomePage() {
                       size="sm"
                       className="mt-3 sm:mt-4 text-[#00C49A] hover:text-[#00B894] text-sm"
                     >
-                      <Link
-                        href={`/book/${slug}`}
-                        aria-label={`Book ${service.name}`}
-                      >
-                        Book Now →
-                      </Link>
+                      <Link href={`/Homepage`}>Book Now →</Link>
                     </Button>
                   </CardContent>
                 </Card>
@@ -376,7 +329,7 @@ export default function HomePage() {
       {/* How It Works */}
       <section
         id="how-it-works"
-        className="py-12 sm:py-16 lg:py-20 bg-[#1e3a8a]"
+        className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
@@ -426,7 +379,7 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-[#1e40af]">
+      <section className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="order-2 lg:order-1">
@@ -456,10 +409,11 @@ export default function HomePage() {
             </div>
             <div className="relative order-1 lg:order-2">
               <Image
-                src="/happy-customer-repairman.jpg"
+                src="/happy-customer-repairman.png"
                 alt="Happy customer"
                 width={800}
                 height={600}
+                unoptimized
                 className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-2xl shadow-2xl"
                 priority // optional: improves LCP for above-the-fold images
               />
@@ -482,8 +436,8 @@ export default function HomePage() {
               What Our Customers Say
             </h2>
             <p className="text-lg sm:text-xl text-[#cbd5e1] max-w-2xl mx-auto">
-              Do npt just take our word for it - hear from thousands of satisfied
-              customers
+              Do npt just take our word for it - hear from thousands of
+              satisfied customers
             </p>
             <div className="flex flex-wrap items-center justify-center mt-4 sm:mt-6 gap-2">
               <div className="flex space-x-1">
@@ -574,8 +528,10 @@ export default function HomePage() {
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center mb-3 sm:mb-4">
                     <Image
-                      src={testimonial.image || "/placeholder.svg"}
+                      src="/placeholder.svg"
                       alt={testimonial.name}
+                      width={48}
+                      height={48}
                       className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover mr-3 sm:mr-4"
                     />
                     <div>
@@ -654,7 +610,7 @@ export default function HomePage() {
       </section>
 
       {/* Review Submission Section - Simplified for mobile */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-[#1e40af]">
+      <section className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -788,7 +744,7 @@ export default function HomePage() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="flex-1 h-11 sm:h-12 bg-[#00C49A] hover:bg-[#00B894] text-white rounded-xl font-semibold text-sm sm:text-base"
+                    className="h-11 sm:h-12 px-6 sm:px-8 border-2 border-[#007BFF] text-[#007BFF] hover:bg-[#007BFF] hover:text-white rounded-xl bg-transparent text-sm sm:text-base"
                   >
                     Submit Review
                   </Button>
@@ -819,18 +775,15 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md mx-auto sm:max-w-none">
             <Button
+              // href="/services"
               size="lg"
               variant="secondary"
               className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-[#00C49A] hover:bg-[#00B894] text-white text-sm sm:text-base"
+              onClick={() => {
+                window.location.href = "#";
+              }}
             >
               Browse Services
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl border-white text-white hover:bg-white hover:text-[#007BFF] bg-transparent text-sm sm:text-base"
-            >
-              Become a Pro
             </Button>
           </div>
         </div>
@@ -940,15 +893,15 @@ export default function HomePage() {
               <div className="space-y-2 text-[#cbd5e1] text-sm sm:text-base">
                 <div className="flex items-center space-x-2">
                   <Phone className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                  <span>+1 (555) 123-4567</span>
+                  <span>+91 xxx </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Mail className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                  <span>support@fixmate.com</span>
+                  <span>support@nexsyn.com</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                  <span>New York, NY</span>
+                  <span>Madhya Pradesh, India</span>
                 </div>
               </div>
             </div>
