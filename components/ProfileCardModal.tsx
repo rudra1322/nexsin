@@ -17,8 +17,7 @@ interface ProfileState {
   mobile: string;
 }
 
-// 👇 Yahan pe wahi image ka path hai jo tumne diya tha
-const defaultAvatar = "public/default-user.png";
+const defaultAvatar = "/defaultcharacter.png";
 
 
 const ProfileCardModal: React.FC<ProfileModalProps> = ({
@@ -28,21 +27,31 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showAvatarOptions, setShowAvatarOptions] = useState(false);
+  const [animate, setAnimate] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
 
   const [inputs, setInputs] = useState<ProfileState>({
     avatarSrc,
-    fullName: "Alexa Rawles",
+    fullName: "abhi yadav",
     nickName: "Alexa",
     gender: "Female",
     mobile: "9876543210",
   });
 
+<<<<<<< HEAD
  useEffect(() => {
   if (!avatarSrc) return;
   // Schedule update for next event loop tick
   setTimeout(() => {
+=======
+  // animation trigger on mount
+  useEffect(() => {
+    setTimeout(() => setAnimate(true), 50);
+  }, []);
+
+  useEffect(() => {
+>>>>>>> 64349cfc021e79102ca98471a460ca687c4cc332
     setInputs((prev) => ({ ...prev, avatarSrc }));
   }, 0);
 }, [avatarSrc]);
@@ -87,34 +96,47 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[9999] flex flex-col justify-end bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-4xl bg-[#0f172a] text-white rounded-3xl shadow-[0_8px_40px_rgba(0,0,0,0.4)] overflow-hidden border border-white/10 flex flex-col"
         onClick={(e) => e.stopPropagation()}
+        className={`relative w-full max-w-2xl mx-auto mb-6 
+          bg-[rgba(15,23,42,0.92)] text-white rounded-t-3xl 
+          shadow-[0_-8px_40px_rgba(0,0,0,0.4)] overflow-hidden 
+          border border-white/10 flex flex-col backdrop-blur-md backdrop-saturate-150
+          transform transition-all duration-500 ease-out 
+          ${animate ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
       >
-        {/* ❌ Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-3xl"
-        >
-          &times;
-        </button>
+        {/* 🔷 Top Header Block */}
+        <div className="flex items-center justify-between px-5 py-4 bg-[#0f172a]/60 backdrop-blur-sm border-b border-white/10">
+          <h3 className="text-lg font-semibold text-gray-200 tracking-wide">
+            User Profile
+          </h3>
+
+          {/* ❌ Close Button */}
+          <button
+            onClick={onClose}
+            className="text-gray-300 hover:text-white text-2xl bg-white/5 w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/10 transition-all duration-200 ease-out"
+          >
+            &times;
+          </button>
+        </div>
 
         {/* Header */}
-        <div className="text-center p-6 border-b border-white/10">
-          <h2 className="text-3xl font-semibold text-gray-100 tracking-wide">
+        <div className="text-center p-5 border-b border-[oklch(12.9%_0.042_264.695)] relative">
+          <h2 className="text-2xl font-semibold text-gray-100 tracking-wide">
             Profile Overview
           </h2>
+          <div className="absolute left-1/2 -bottom-[1px] w-20 h-[2px] bg-[oklch(12.9%_0.042_264.695)] -translate-x-1/2 rounded-full"></div>
         </div>
 
         {/* Avatar Section */}
-        <div className="flex flex-col items-center justify-center py-8">
+        <div className="flex flex-col items-center justify-center py-6 relative">
           <div
             className={`relative rounded-full ${
               isEditing ? "cursor-pointer" : ""
-            } group`}
+            } group transition-transform duration-300 hover:scale-[1.02]`}
             onClick={handleAvatarClick}
           >
             <Image
@@ -124,20 +146,18 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
                   : defaultAvatar
               }
               alt="Avatar"
-              className="w-36 h-36 rounded-full object-cover border-2 border-gray-600 shadow-md bg-gray-700"
+              className="w-28 h-28 rounded-full object-cover border-2 border-[oklch(12.9%_0.042_264.695)] shadow-md bg-gray-700"
             />
             {isEditing && (
               <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                <span className="text-white text-xs font-semibold">
-                  Change
-                </span>
+                <span className="text-white text-xs font-semibold">Change</span>
               </div>
             )}
           </div>
 
           {/* Avatar Options */}
           {isEditing && showAvatarOptions && (
-            <div className="absolute mt-44 bg-slate-900 border border-gray-700 rounded-lg shadow-lg p-3 flex flex-col space-y-2 z-[10001]">
+            <div className="absolute mt-36 bg-slate-900 border border-[oklch(12.9%_0.042_264.695)] rounded-lg shadow-lg p-3 flex flex-col space-y-2 z-[10001]">
               <button
                 className="py-2 px-3 text-left hover:bg-slate-800 rounded"
                 onClick={handlePickGallery}
@@ -166,7 +186,7 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
           {!isEditing && (
             <button
               onClick={handleEdit}
-              className="mt-8 px-8 py-3 font-semibold text-white bg-blue-600 rounded-xl shadow-md active:translate-y-[1px] active:scale-95 transition-transform duration-150 ease-out hover:bg-blue-500"
+              className="mt-6 px-6 py-2.5 font-semibold text-white bg-[oklch(12.9%_0.042_264.695)] rounded-lg shadow-md active:translate-y-[1px] active:scale-95 transition-transform duration-150 ease-out hover:brightness-125"
             >
               Edit Profile
             </button>
@@ -175,14 +195,15 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
 
         {/* Information Section */}
         <div
-          className={`p-10 transition-all duration-500 ${
+          className={`p-6 border-t border-[oklch(12.9%_0.042_264.695)/60] transition-all duration-500 ${
             !isEditing
               ? "opacity-40 blur-sm pointer-events-none"
               : "opacity-100 blur-none"
           }`}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            {/* Full Name */}
+            <div className="bg-[#1e293b]/40 border border-[oklch(12.9%_0.042_264.695)/60] p-3 rounded-xl hover:border-[oklch(12.9%_0.042_264.695)] transition-all">
               <label className="block text-sm text-gray-400">Full Name</label>
               <input
                 id="fullName"
@@ -190,15 +211,16 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
                 value={inputs.fullName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
-                className={`w-full px-3 py-2 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
+                className={`w-full px-3 py-1.5 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
                   !isEditing
                     ? "opacity-50 cursor-default"
-                    : "focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+                    : "focus:outline-none focus:ring-2 focus:ring-[oklch(12.9%_0.042_264.695)]/60"
                 }`}
               />
             </div>
 
-            <div>
+            {/* Nick Name */}
+            <div className="bg-[#1e293b]/40 border border-[oklch(12.9%_0.042_264.695)/60] p-3 rounded-xl hover:border-[oklch(12.9%_0.042_264.695)] transition-all">
               <label className="block text-sm text-gray-400">Nick Name</label>
               <input
                 id="nickName"
@@ -206,25 +228,26 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
                 value={inputs.nickName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
-                className={`w-full px-3 py-2 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
+                className={`w-full px-3 py-1.5 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
                   !isEditing
                     ? "opacity-50 cursor-default"
-                    : "focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+                    : "focus:outline-none focus:ring-2 focus:ring-[oklch(12.9%_0.042_264.695)]/60"
                 }`}
               />
             </div>
 
-            <div>
+            {/* Gender */}
+            <div className="bg-[#1e293b]/40 border border-[oklch(12.9%_0.042_264.695)/60] p-3 rounded-xl hover:border-[oklch(12.9%_0.042_264.695)] transition-all">
               <label className="block text-sm text-gray-400">Gender</label>
               <select
                 id="gender"
                 value={inputs.gender}
                 onChange={handleSelectChange}
                 disabled={!isEditing}
-                className={`w-full px-3 py-2 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
+                className={`w-full px-3 py-1.5 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
                   !isEditing
                     ? "opacity-50 cursor-default"
-                    : "focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+                    : "focus:outline-none focus:ring-2 focus:ring-[oklch(12.9%_0.042_264.695)]/60"
                 }`}
               >
                 <option>Female</option>
@@ -233,7 +256,8 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
               </select>
             </div>
 
-            <div>
+            {/* Mobile */}
+            <div className="bg-[#1e293b]/40 border border-[oklch(12.9%_0.042_264.695)/60] p-3 rounded-xl hover:border-[oklch(12.9%_0.042_264.695)] transition-all">
               <label className="block text-sm text-gray-400">
                 Mobile Number
               </label>
@@ -243,29 +267,29 @@ const ProfileCardModal: React.FC<ProfileModalProps> = ({
                 value={inputs.mobile}
                 onChange={handleInputChange}
                 disabled={!isEditing}
-                className={`w-full px-3 py-2 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
+                className={`w-full px-3 py-1.5 mt-1 bg-[#1e293b] border border-gray-700 rounded-lg text-gray-100 ${
                   !isEditing
                     ? "opacity-50 cursor-default"
-                    : "focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+                    : "focus:outline-none focus:ring-2 focus:ring-[oklch(12.9%_0.042_264.695)]/60"
                 }`}
               />
             </div>
           </div>
         </div>
 
-        {/* ✅ Bottom Center Buttons */}
+        {/* ✅ Bottom Buttons */}
         {isEditing && (
-          <div className="flex justify-center items-center py-6 border-t border-gray-700 bg-[#111827]/60">
-            <div className="flex gap-4">
+          <div className="flex justify-center items-center py-5 border-t border-[oklch(12.9%_0.042_264.695)/50] bg-[#111827]/60">
+            <div className="flex gap-3">
               <button
                 onClick={handleCancel}
-                className="px-6 py-2 font-semibold text-gray-300 bg-gray-700/40 border border-gray-600 rounded-lg hover:bg-gray-700/70 transition-all duration-200 ease-out"
+                className="px-5 py-2 font-semibold text-gray-300 bg-gray-700/40 border border-gray-600 rounded-lg hover:bg-gray-700/70 transition-all duration-200 ease-out"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="px-6 py-2.5 font-semibold text-white bg-green-600 rounded-lg shadow-sm hover:bg-green-500 active:translate-y-[2px] active:shadow-inner transition-all duration-150 ease-out"
+                className="px-5 py-2 font-semibold text-white bg-[oklch(12.9%_0.042_264.695)] rounded-lg shadow-sm hover:brightness-125 active:translate-y-[2px] active:shadow-inner transition-all duration-150 ease-out"
               >
                 Save Changes
               </button>
