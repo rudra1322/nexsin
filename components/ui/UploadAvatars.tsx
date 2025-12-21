@@ -109,12 +109,20 @@ export default function UploadAvatars({
                     >
                       Contact Us
                     </li>
-
+                    <li className="py-3 hover:bg-gray-800 cursor-pointer">
+                      Order Status
+                    </li>
                     <li className="py-3 hover:bg-gray-800 cursor-pointer">
                       History
                     </li>
-                    <li className="py-3 hover:bg-gray-800 cursor-pointer">
-                      Order Status
+                    <li
+                      className="py-3 hover:bg-gray-800 cursor-pointer"
+                      onClick={() => {
+                        setOpen(false);
+                        router.push("/register");
+                      }}
+                    >
+                      Register as professional
                     </li>
 
                     <li
