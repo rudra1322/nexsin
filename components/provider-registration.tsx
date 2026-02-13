@@ -35,23 +35,25 @@ export default function ProviderRegistration() {
   const [applicationId, setApplicationId] = useState("")
   const [showStepperIntro, setShowStepperIntro] = useState(true)
 
+  // ================= PERSONAL DETAILS =================
   const [personalDetails, setPersonalDetails] = useState<PersonalDetails>({
-    fullName: "",
+    name: "",
     email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    pincode: "",
+    createPassword: "",
+    confirmPassword: "",
   })
 
+  // ================= SERVICE DETAILS =================
   const [serviceDetails, setServiceDetails] = useState<ServiceDetails>({
-    category: "electrician",
-    experience: "",
-    serviceAreas: [],
-    description: "",
+    shopName: "",
+    ownerName: "",
+    startYear: "",
+    category: [],
+    customCategory: [],
+    serviceRange: "",
   })
 
+  // ================= DOCUMENTS =================
   const [documents, setDocuments] = useState<Documents>({
     aadhaarFront: null,
     aadhaarBack: null,
@@ -60,6 +62,10 @@ export default function ProviderRegistration() {
     profilePhoto: null,
   })
 
+  // ================= GST (OPTIONAL) =================
+  const [gstNumber, setGstNumber] = useState("")
+
+  // ================= BANK DETAILS =================
   const [bankDetails, setBankDetails] = useState<BankDetails>({
     accountHolderName: "",
     accountNumber: "",
@@ -67,23 +73,57 @@ export default function ProviderRegistration() {
     bankName: "",
   })
 
-  /* Restore saved progress */
+  // ==================================================
+  // SAFE RESTORE SAVED DATA
+  // ==================================================
   useEffect(() => {
     const saved = getCurrentApplication()
+
     if (saved) {
       setCurrentStep(saved.currentStep || 1)
-      setPersonalDetails(saved.personalDetails || personalDetails)
-      setServiceDetails(saved.serviceDetails || serviceDetails)
-      setBankDetails(saved.bankDetails || bankDetails)
+
+      setPersonalDetails({
+        name: saved.personalDetails?.name || "",
+        email: saved.personalDetails?.email || "",
+        createPassword: saved.personalDetails?.createPassword || "",
+        confirmPassword:
+          saved.personalDetails?.confirmPassword || "",
+      })
+
+      setServiceDetails({
+        shopName: saved.serviceDetails?.shopName || "",
+        ownerName: saved.serviceDetails?.ownerName || "",
+        startYear: saved.serviceDetails?.startYear || "",
+        category: saved.serviceDetails?.category || [],
+        customCategory:
+          saved.serviceDetails?.customCategory || [],
+        serviceRange:
+          saved.serviceDetails?.serviceRange || "",
+      })
+
+      setBankDetails({
+        accountHolderName:
+          saved.bankDetails?.accountHolderName || "",
+        accountNumber:
+          saved.bankDetails?.accountNumber || "",
+        ifscCode: saved.bankDetails?.ifscCode || "",
+        bankName: saved.bankDetails?.bankName || "",
+      })
+
+      setGstNumber(saved.gstNumber || "")
     }
   }, [])
 
+  // ==================================================
+  // SAVE PROGRESS
+  // ==================================================
   const saveProgress = () => {
     saveCurrentApplication({
       currentStep,
       personalDetails,
       serviceDetails,
       bankDetails,
+      gstNumber,
     })
   }
 
@@ -109,7 +149,9 @@ export default function ProviderRegistration() {
   return (
     <>
       {showStepperIntro && (
-        <StepperIntroCard onFinish={() => setShowStepperIntro(false)} />
+        <StepperIntroCard
+          onFinish={() => setShowStepperIntro(false)}
+        />
       )}
 
       {!showStepperIntro && (
@@ -126,17 +168,18 @@ export default function ProviderRegistration() {
               </p>
             </div>
 
-            {/* ======= CENTERED PREMIUM STEPPER ======= */}
+            {/* STEPPER */}
             <div className="flex justify-center mb-14">
               <div className="w-full max-w-3xl">
                 <div className="flex items-center justify-between">
                   {steps.map((step, index) => (
-                    <div key={step.id} className="flex flex-1 items-center">
-
-                      {/* STEP */}
+                    <div
+                      key={step.id}
+                      className="flex flex-1 items-center"
+                    >
                       <div className="flex flex-col items-center z-10">
                         <div
-                          className={`h-9 w-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300
+                          className={`h-9 w-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all
                             ${
                               currentStep >= step.id
                                 ? "bg-blue-600 text-white shadow-md"
@@ -150,10 +193,9 @@ export default function ProviderRegistration() {
                         </span>
                       </div>
 
-                      {/* CONNECTOR */}
                       {index !== steps.length - 1 && (
                         <div
-                          className={`flex-1 h-[2px] mx-1 mt-[-15px] transition-all duration-600
+                          className={`flex-1 h-[2px] mx-1 mt-[-15px] transition-all
                             ${
                               currentStep > step.id
                                 ? "bg-blue-600"
@@ -190,9 +232,9 @@ export default function ProviderRegistration() {
               {currentStep === 3 && (
                 <DocumentUploadStep
                   documents={documents}
-                  bankDetails={bankDetails}
+                  gstNumber={gstNumber}
                   onUpdateDocuments={setDocuments}
-                  onUpdateBankDetails={setBankDetails}
+                  onUpdateGst={setGstNumber}
                   onNext={handleNext}
                   onBack={handleBack}
                 />
@@ -204,6 +246,7 @@ export default function ProviderRegistration() {
                   serviceDetails={serviceDetails}
                   documents={documents}
                   bankDetails={bankDetails}
+                  gstNumber={gstNumber}
                   onBack={handleBack}
                   onSubmit={handleSubmit}
                 />

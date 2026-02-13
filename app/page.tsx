@@ -40,48 +40,56 @@ export default function HomePage() {
     {
       name: "Cooler Repair",
       icon: Snowflake,
+        image: "/cooler.png",
       description: "AC & Cooler maintenance",
       color: "bg-[#E3F2FD] text-[#007BFF]",
     },
     {
       name: "Laptop Repair",
       icon: Laptop,
+        image: "/laptop.png",
       description: "Computer & laptop fixes",
       color: "bg-[#F3E5F5] text-[#9C27B0]",
     },
     {
       name: "Car Mechanic",
       icon: Car,
+        image: "/car.jpg",  
       description: "Auto repair services",
       color: "bg-[#FFEBEE] text-[#F44336]",
     },
     {
       name: "Plumber",
       icon: Droplets,
+        image: "/plumber.png",
       description: "Water & pipe solutions",
       color: "bg-[#E0F2F1] text-[#00BCD4]",
     },
     {
       name: "Electrician",
       icon: Zap,
+        image: "/electrician.png",
       description: "Electrical installations",
       color: "bg-[#FFF8E1] text-[#FF9800]",
     },
     {
       name: "AC Service",
       icon: Snowflake,
+        image: "/ac.png",
       description: "Air conditioning repair",
       color: "bg-[#E8EAF6] text-[#3F51B5]",
     },
     {
       name: "Carpenter",
       icon: Hammer,
+        image: "/carpenter.png",
       description: "Wood work & furniture",
       color: "bg-[#FFF3E0] text-[#FF5722]",
     },
     {
       name: "Painter",
       icon: Paintbrush,
+        image: "/penter.png",
       description: "Interior & exterior painting",
       color: "bg-[#E8F5E8] text-[#4CAF50]",
     },
@@ -269,62 +277,86 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+{/* Services Section */}
+<section id="services" className="py-12 lg:py-20 bg-[#0F172A]">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* Services Section */}
-      <section id="services" className="py-12 sm:py-1 lg:py-20 bg-[#0F172A]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-              Our Services
-            </h2>
-            <p className="text-lg sm:text-xl text-[#cbd5e1] max-w-2xl mx-auto">
-              Professional repair and maintenance services for your home and
-              office needs
+    {/* Header */}
+    <div className="text-center mb-12 sm:mb-16">
+      <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
+        Our Services
+      </h2>
+      <p className="text-lg sm:text-xl text-[#cbd5e1] max-w-2xl mx-auto">
+        Professional repair and maintenance services for your home and office
+        needs
+      </p>
+    </div>
+
+    {/* Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      {services.map((service, index) => (
+        <Card
+          key={index}
+          className="group bg-white border-0 shadow-md
+                     hover:shadow-xl transition-all duration-300
+                     hover:-translate-y-2 cursor-pointer"
+          role="link"
+          tabIndex={0}
+          onClick={() => router.push("/login")}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              router.push("/login");
+            }
+          }}
+        >
+          <CardContent className="p-4 sm:p-5 text-center">
+
+            {/* SERVICE IMAGE */}
+            {service.image && (
+              <div className="relative w-full h-28 mb-4 rounded-xl overflow-hidden">
+                <Image
+                  src={service.image}
+                  alt={service.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            )}
+
+            {/* ICON */}
+            <div
+              className={`w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-3 rounded-2xl 
+                          ${service.color} flex items-center justify-center
+                          group-hover:scale-110 transition-transform`}
+            >
+              <service.icon className="h-6 w-6 sm:h-7 sm:w-7" />
+            </div>
+
+            {/* TEXT */}
+            <h3 className="text-base sm:text-lg font-semibold text-[#343A40] mb-1">
+              {service.name}
+            </h3>
+
+            <p className="text-sm text-[#6C757D] mb-3">
+              {service.description}
             </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-3">
-            {services.map((service, index) => {
-              return (
-                <Card
-                  key={index}
-                  className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md hover:-translate-y-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#007BFF] bg-white touch-manipulation"
-                  role="link"
-                  tabIndex={0}
-                  onClick={() => router.push(`/login`)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      router.push(`/login`);
-                    }
-                  }}
-                >
-                  <CardContent className="p-4 sm:p-6 text-center">
-                    <div
-                      className={`w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-2xl ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <service.icon className="h-6 w-6 sm:h-8 sm:w-8" />
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-[#343A40] mb-2">
-                      {service.name}
-                    </h3>
-                    <p className="text-[#6C757D] text-sm">
-                      {service.description}
-                    </p>
-                    <Button
-                      asChild
-                      variant="ghost"
-                      size="sm"
-                      className="mt-3 sm:mt-4 text-[#00C49A] hover:text-[#00B894] text-sm"
-                    >
-                      <Link href={`/Homepage`}>Book Now →</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+
+            {/* CTA */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-[#00C49A] hover:text-[#00B894]"
+            >
+              Book Now →
+            </Button>
+
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* How It Works */}
       <section
@@ -463,7 +495,7 @@ export default function HomePage() {
               {
                 name: "Sarah Johnson",
                 role: "Homeowner",
-                image: "/professional-woman-smiling.png",
+               
                 review:
                   "Amazing service! The plumber arrived exactly on time and fixed our kitchen sink issue in under an hour. Professional, clean, and reasonably priced.",
                 service: "Plumbing Service",
@@ -473,7 +505,7 @@ export default function HomePage() {
               {
                 name: "Mike Chen",
                 role: "Business Owner",
-                image: "/middle-aged-man-smiling.png",
+             
                 review:
                   "My laptop was completely dead, but the technician brought it back to life! Quick diagnosis, fair pricing, and excellent communication throughout.",
                 service: "Laptop Repair",
@@ -483,7 +515,7 @@ export default function HomePage() {
               {
                 name: "Emily Rodriguez",
                 role: "Apartment Renter",
-                image: "/young-professional-woman.png",
+               
                 review:
                   "The electrician was incredibly knowledgeable and solved our power outlet issues safely. I'll definitely use FixMate again for future repairs.",
                 service: "Electrical Service",
@@ -493,7 +525,7 @@ export default function HomePage() {
               {
                 name: "Robert Williams",
                 role: "Retiree",
-                image: "/older-man-glasses.png",
+               
                 review:
                   "Our AC broke down during a heatwave. FixMate got someone out the same day and had us cool again within 2 hours. Lifesavers!",
                 service: "AC Repair",
@@ -503,7 +535,7 @@ export default function HomePage() {
               {
                 name: "Jessica Park",
                 role: "Marketing Manager",
-                image: "/young-professional-woman.png",
+              
                 review:
                   "The carpenter did an amazing job fixing our kitchen cabinets. Attention to detail was perfect and the pricing was very transparent.",
                 service: "Carpentry",
@@ -513,7 +545,7 @@ export default function HomePage() {
               {
                 name: "David Kumar",
                 role: "Software Engineer",
-                image: "/business-man.png",
+              
                 review:
                   "Needed my car serviced urgently before a road trip. The mechanic was thorough, honest about what needed fixing, and got me back on the road safely.",
                 service: "Auto Repair",
@@ -796,7 +828,7 @@ export default function HomePage() {
             <div className="sm:col-span-2 md:col-span-1">
               <div className="flex items-center space-x-2 mb-4">
                 <Wrench className="h-6 w-6 sm:h-8 sm:w-8 text-[#007BFF]" />
-                <span className="text-xl sm:text-2xl font-bold">FixMate</span>
+                <span className="text-xl sm:text-2xl font-bold">Nexcyn</span>
               </div>
               <p className="text-[#cbd5e1] mb-4 text-sm sm:text-base">
                 Your trusted partner for all home repair and maintenance
@@ -854,7 +886,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-[#cbd5e1] text-sm sm:text-base">
                 <li>
                   <a
-                    href="#"
+                    href="/information/about"
                     className="hover:text-[#FFFFFF] transition-colors"
                   >
                     About Us
@@ -862,15 +894,16 @@ export default function HomePage() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/information/careers"
                     className="hover:text-[#FFFFFF] transition-colors"
                   >
                     Careers
                   </a>
                 </li>
+                
                 <li>
                   <a
-                    href="#"
+                    href="/legal/terms"
                     className="hover:text-[#FFFFFF] transition-colors"
                   >
                     Privacy Policy

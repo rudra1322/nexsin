@@ -2,16 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Wrench,
-  Facebook,
-  Twitter,
-  Instagram,
-  Phone,
-  Mail,
-  MapPin,
-  CheckCircle,
-} from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -20,12 +12,19 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [agree, setAgree] = useState(false);
 
   const sendOtp = () => {
+    if (!agree) {
+      alert("Please agree to Terms & Conditions");
+      return;
+    }
+
     if (phone.length !== 10) {
       alert("Enter valid 10-digit mobile number");
       return;
     }
+
     setStep("otp");
   };
 
@@ -34,6 +33,7 @@ export default function RegisterPage() {
       alert("Enter valid OTP");
       return;
     }
+
     setLoading(true);
 
     setTimeout(() => {
@@ -49,7 +49,6 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-[#0a1a33] flex flex-col">
 
-      {/* ================= MAIN CONTENT ================= */}
       <div className="flex-1 px-6 py-20">
         <div className="w-full max-w-6xl mx-auto">
 
@@ -75,6 +74,7 @@ export default function RegisterPage() {
                   borderBottomRightRadius: "120px",
                 }}
               >
+
                 {/* PHONE STEP */}
                 {step === "phone" && (
                   <>
@@ -85,11 +85,12 @@ export default function RegisterPage() {
                       Enter your mobile number to receive OTP
                     </p>
 
+                    {/* PHONE INPUT */}
                     <div className="relative mb-6">
                       <label className="absolute -top-2 left-4 bg-white px-1 text-xs text-gray-500">
                         Mobile Number
                       </label>
-                      <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 focus-within:border-blue-600">
+                      <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 focus-within:border-blue-600 transition">
                         <span className="text-gray-500 mr-3">+91</span>
                         <input
                           type="tel"
@@ -104,9 +105,43 @@ export default function RegisterPage() {
                       </div>
                     </div>
 
+                    {/* TERMS CHECKBOX */}
+                    <div className="flex items-start gap-2 text-sm mb-6">
+                      <input
+                        type="checkbox"
+                        checked={agree}
+                        onChange={(e) => setAgree(e.target.checked)}
+                        className="mt-1 accent-blue-600"
+                      />
+                      <span className="text-gray-600">
+                        I agree to the{" "}
+                        <Link
+                          href="/legal/terms"
+                          className="text-blue-600 hover:underline"
+                        >
+                          Terms & Conditions
+                        </Link>{" "}
+                        and{" "}
+                        <Link
+                          href="/legal/privacy"
+                          className="text-blue-600 hover:underline"
+                        >
+                          Privacy Policy
+                        </Link>
+                      </span>
+                    </div>
+
+                    {/* SEND OTP BUTTON */}
                     <button
                       onClick={sendOtp}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-full transition shadow-lg"
+                      disabled={!agree}
+                      className={`w-full font-semibold py-3 rounded-full transition shadow-lg
+                        ${
+                          !agree
+                            ? "bg-blue-400 cursor-not-allowed"
+                            : "bg-blue-600 hover:bg-blue-700"
+                        }
+                        text-white`}
                     >
                       Send OTP →
                     </button>
@@ -141,9 +176,16 @@ export default function RegisterPage() {
                     <button
                       onClick={verifyOtp}
                       disabled={loading}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-full transition shadow-lg"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-full transition shadow-lg flex items-center justify-center"
                     >
-                      {loading ? "Verifying..." : "Verify & Continue →"}
+                      {loading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          Verifying...
+                        </>
+                      ) : (
+                        "Verify & Continue →"
+                      )}
                     </button>
 
                     <button
@@ -167,6 +209,7 @@ export default function RegisterPage() {
                     </p>
                   </div>
                 )}
+
               </div>
             </div>
 
@@ -175,83 +218,13 @@ export default function RegisterPage() {
               <img
                 src="/illustrations/image.png"
                 alt="Service Professional"
-                className="w-[420px] drop-shadow-2xl"
+                className="w-[420px] max-w-full"
               />
             </div>
 
           </div>
         </div>
       </div>
-
-      {/* ================= FOOTER ================= */}
-      <footer className="bg-[#0f172a] text-white py-12 sm:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-
-            {/* BRAND */}
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Wrench className="h-8 w-8 text-[#007BFF]" />
-                <span className="text-2xl font-bold">FixMate</span>
-              </div>
-              <p className="text-[#cbd5e1] mb-4">
-                Your trusted partner for all home repair and maintenance services.
-              </p>
-              <div className="flex space-x-4">
-                <Facebook className="h-5 w-5 hover:text-white cursor-pointer" />
-                <Twitter className="h-5 w-5 hover:text-white cursor-pointer" />
-                <Instagram className="h-5 w-5 hover:text-white cursor-pointer" />
-              </div>
-            </div>
-
-            {/* SERVICES */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Services</h3>
-              <ul className="space-y-2 text-[#cbd5e1]">
-                <li>Plumbing</li>
-                <li>Electrical</li>
-                <li>AC Repair</li>
-                <li>Carpentry</li>
-              </ul>
-            </div>
-
-            {/* COMPANY */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-[#cbd5e1]">
-                <li>About Us</li>
-                <li>Careers</li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-              </ul>
-            </div>
-
-            {/* CONTACT */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <div className="space-y-2 text-[#cbd5e1]">
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4" />
-                  <span>+91 XXX XXX XXXX</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  <span>support@nexsyn.com</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>Madhya Pradesh, India</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div className="border-t border-gray-800 mt-10 pt-6 text-center text-[#cbd5e1]">
-            © 2024 FixMate. All rights reserved.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

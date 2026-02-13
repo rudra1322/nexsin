@@ -1,88 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import CardNav, { CardNavItem } from "@/components/CardNav";
-import { Button } from "@/components/ui/button";
-import Card from "@mui/material/Card";
-
-import CardContent from "@mui/material/CardContent";
-import {
-  Car,
-  Droplets,
-  Hammer,
-  Laptop,
-  Paintbrush,
-  Snowflake,
-  Zap,
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import UploadAvatars from "@/components/ui/UploadAvatars";
+import { Hero } from "@/components/Hero";
+import { ServicesGrid } from "@/components/ServicesGrid";
+import { FinalCTA } from "@/components/finalCTA";
 
-// ✅ Icon map
-const ICONS = {
-  Snowflake,
-  Laptop,
-  Car,
-  Droplets,
-  Zap,
-  Hammer,
-  Paintbrush,
-};
+/* FOOTER ICONS */
+import {
+  Wrench,
+  Facebook,
+  Twitter,
+  Instagram,
+  Phone,
+  Mail,
+  MapPin,
+} from "lucide-react";
 
-// ✅ Default service list
-const defaultServices = [
-  {
-    name: "Cooler Repair",
-    icon: "Snowflake",
-    description: "AC & Cooler maintenance",
-    color: "bg-[#E3F2FD] text-[#007BFF]",
-  },
-  {
-    name: "Laptop Repair",
-    icon: "Laptop",
-    description: "Computer & laptop fixes",
-    color: "bg-[#F3E5F5] text-[#9C27B0]",
-  },
-  {
-    name: "Car Mechanic",
-    icon: "Car",
-    description: "Auto repair services",
-    color: "bg-[#FFEBEE] text-[#F44336]",
-  },
-  {
-    name: "Plumber",
-    icon: "Droplets",
-    description: "Water & pipe solutions",
-    color: "bg-[#E0F2F1] text-[#00BCD4]",
-  },
-  {
-    name: "Electrician",
-    icon: "Zap",
-    description: "Electrical installations",
-    color: "bg-[#FFF8E1] text-[#FF9800]",
-  },
-  {
-    name: "AC Service",
-    icon: "Snowflake",
-    description: "Air conditioning repair",
-    color: "bg-[#E8EAF6] text-[#3F51B5]",
-  },
-  {
-    name: "Carpenter",
-    icon: "Hammer",
-    description: "Wood work & furniture",
-    color: "bg-[#FFF3E0] text-[#FF5722]",
-  },
-  {
-    name: "Painter",
-    icon: "Paintbrush",
-    description: "Interior & exterior painting",
-    color: "bg-[#E8F5E8] text-[#4CAF50]",
-  },
-];
-
-// ✅ Navbar items
+/* ---------------- NAV ITEMS ---------------- */
 const items: CardNavItem[] = [
   {
     label: "About",
@@ -90,7 +26,7 @@ const items: CardNavItem[] = [
     textColor: "#fff",
     links: [
       { label: "Company", href: "/information/about", ariaLabel: "About Company" },
-      { label: "Careers", href: "/information/careers", ariaLabel: "About Careers" },
+      { label: "Careers", href: "/information/careers", ariaLabel: "Careers" },
     ],
   },
   {
@@ -99,11 +35,7 @@ const items: CardNavItem[] = [
     textColor: "#fff",
     links: [
       { label: "Featured", href: "/features", ariaLabel: "Featured Projects" },
-      {
-        label: "Case Studies",
-        href: "/projects",
-        ariaLabel: "Project Case Studies",
-      },
+      { label: "Case Studies", href: "/projects", ariaLabel: "Case Studies" },
     ],
   },
   {
@@ -111,7 +43,7 @@ const items: CardNavItem[] = [
     bgColor: "#271E37",
     textColor: "#fff",
     links: [
-      { label: "Email", href: "/email", ariaLabel: "Email us" },
+      { label: "Email", href: "/email", ariaLabel: "Email" },
       { label: "Twitter", href: "/twitter", ariaLabel: "Twitter" },
       { label: "LinkedIn", href: "/linkedin", ariaLabel: "LinkedIn" },
     ],
@@ -119,140 +51,106 @@ const items: CardNavItem[] = [
 ];
 
 export default function HomePage() {
-  const router = useRouter();
-
-  //  States
-  const [serviceList, setServiceList] = React.useState(defaultServices);
   const [avatarSrc, setAvatarSrc] = React.useState("/defaultcharacter.png");
-
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [showForm, setShowForm] = React.useState(false);
-  const [newService, setNewService] = React.useState({
-    name: "",
-    description: "",
-  });
 
-  // 🧭 Navigation
-  const goToHome = () => {
-    router.push("/home");
+  // 🔥 ref for scrolling
+  const servicesRef = useRef<HTMLDivElement>(null);
+
+  const scrollToServices = () => {
+    servicesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
-  // 🔍 Filter services by search
-  const filteredServices = serviceList.filter((service) =>
-    service.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // ➕ Create new service
-  const handleCreateService = () => {
-    if (!newService.name.trim() || !newService.description.trim()) return;
-
-    setServiceList([
-      ...serviceList,
-      {
-        name: newService.name,
-        description: newService.description,
-        icon: "Laptop", // ✅ store string, not component
-        color: "bg-[#E0F7FA] text-[#006064]",
-      },
-    ]);
-
-    setNewService({ name: "", description: "" });
-    setShowForm(false);
-  };
-
-  // 💾 Optional: Persist services
-  React.useEffect(() => {
-    localStorage.setItem("services", JSON.stringify(serviceList));
-  }, [serviceList]);
-
-  React.useEffect(() => {
-    const stored = localStorage.getItem("services");
-    if (stored) setServiceList(JSON.parse(stored));
-  }, []);
 
   return (
-    <div className="bg-black flex flex-col min-h-screen text-2xl font-semibold">
-      {/* Top Navigation */}
+    <div
+      className="flex flex-col min-h-screen"
+      style={{
+        background: "radial-gradient(circle at top, #1E293B 0%, #0A0D17 60%)",
+      }}
+    >
+      {/* NAVBAR */}
       <CardNav
         items={items}
         baseColor="rgba(235, 222, 222, 0.05)"
-        menuColor="#0e0c0cff"
+        menuColor="#0e0c0c"
         buttonBgColor="#111"
         buttonTextColor="#fff"
-        ease="power3.out"
-        showSearch={true}
+        showSearch
         onSearch={(query) => setSearchQuery(query)}
         UploadAvatarComponent={
           <UploadAvatars avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc} />
         }
       />
 
-      {/* Services Section */}
-      <section
-        id="services"
-        className="py-12 sm:py-16 lg:py-20 bg-[#0F172A] flex-grow"
-      >
+     
+
+      {/* SERVICES (SCROLL TARGET) */}
+      <div ref={servicesRef}>
+        <ServicesGrid />
+      </div>
+
+\
+      {/* FOOTER (NO EXTRA GAP) */}
+      <footer className="bg-[#0f172a] text-white py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Our Services
-            </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Wrench className="h-7 w-7 text-indigo-400" />
+                <span className="text-2xl font-bold">Nexcyn</span>
+              </div>
+              <p className="text-slate-300 text-sm mb-4">
+                Your trusted partner for all home repair and maintenance services.
+              </p>
+              <div className="flex gap-4">
+                <Facebook className="h-5 w-5 text-slate-400 hover:text-white" />
+                <Twitter className="h-5 w-5 text-slate-400 hover:text-white" />
+                <Instagram className="h-5 w-5 text-slate-400 hover:text-white" />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Services</h3>
+              <ul className="space-y-2 text-slate-300 text-sm">
+                <li>Plumbing</li>
+                <li>Electrical</li>
+                <li>AC Repair</li>
+                <li>Carpentry</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-slate-300 text-sm">
+                <li>About Us</li>
+                <li>Careers</li>
+                <li>Privacy Policy</li>
+                <li>Terms of Service</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Contact</h3>
+              <div className="space-y-3 text-slate-300 text-sm">
+                <div className="flex items-center gap-2">
+                  <Phone size={14} /> +91 XXX-XXX-XXXX
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail size={14} /> support@nexsyn.com
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin size={14} /> Madhya Pradesh, India
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Service Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {filteredServices.length > 0 ? (
-              filteredServices.map((service, index) => {
-                const IconComponent =
-                  ICONS[service.icon as keyof typeof ICONS] || Laptop;
-                return (
-                  <Card
-                    key={index}
-                    className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md hover:-translate-y-2 cursor-pointer bg-white"
-                    role="link"
-                    tabIndex={0}
-                    onClick={goToHome}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        router.push(`/login`);
-                      }
-                    }}
-                  >
-                    <CardContent className="p-4 sm:p-6 text-center">
-                      <div
-                        className={`w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-2xl ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
-                      >
-                        <IconComponent className="h-6 w-6 sm:h-8 sm:w-8" />
-                      </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-[#343A40] mb-2">
-                        {service.name}
-                      </h3>
-                      <p className="text-[#6C757D] text-sm">
-                        {service.description}
-                      </p>
-                      <Button
-                        asChild
-                        variant="ghost"
-                        size="sm"
-                        className="mt-3 sm:mt-4 text-[#00C49A] hover:text-[#00B894] text-sm"
-                      >
-                        <Link href={`/home`}>Book Now →</Link>
-                      </Button>
-                    </CardContent>
-                  </Card>
-                );
-              })
-            ) : (
-              <p className="text-center text-gray-400 col-span-full">
-                No services found.
-              </p>
-            )}
+          <div className="border-t border-white/10 mt-10 pt-6 text-center text-slate-400 text-sm">
+            © 2024 FixMate. All rights reserved.
           </div>
         </div>
-      </section>
-   
-      
+      </footer>
     </div>
   );
 }

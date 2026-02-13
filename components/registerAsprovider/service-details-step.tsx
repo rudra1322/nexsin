@@ -1,13 +1,11 @@
 "use client"
 
 import type React from "react"
-
+import { useState } from "react"
 import type { ServiceDetails, ServiceCategory } from "@/types/provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { useState } from "react"
 
 interface ServiceDetailsStepProps {
   data: ServiceDetails
@@ -27,11 +25,23 @@ const serviceCategories: { value: ServiceCategory; label: string }[] = [
   { value: "other", label: "Other" },
 ]
 
-export function ServiceDetailsStep({ data, onUpdate, onNext, onBack }: ServiceDetailsStepProps) {
-  const [newArea, setNewArea] = useState("")
+export function ServiceDetailsStep({
+  data,
+  onUpdate,
+  onNext,
+  onBack,
+}: ServiceDetailsStepProps) {
+
+  const [newCustom, setNewCustom] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (data.category.length === 0) {
+      alert("Please select at least one category")
+      return
+    }
+
     onNext()
   }
 
@@ -39,118 +49,214 @@ export function ServiceDetailsStep({ data, onUpdate, onNext, onBack }: ServiceDe
     onUpdate({ ...data, [field]: value })
   }
 
-  const addServiceArea = () => {
-    if (newArea.trim() && !data.serviceAreas.includes(newArea.trim())) {
-      handleChange("serviceAreas", [...data.serviceAreas, newArea.trim()])
-      setNewArea("")
-    }
-  }
-
-  const removeServiceArea = (area: string) => {
-    handleChange(
-      "serviceAreas",
-      data.serviceAreas.filter((a) => a !== area),
-    )
-  }
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+
+      {/* Heading */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Service Details</h2>
-        <p className="mt-1 text-sm text-gray-600">Tell us about your professional services</p>
+        <h2 className="text-2xl font-bold text-gray-900">
+          Service Details
+        </h2>
+        <p className="mt-1 text-sm text-gray-600">
+          Tell us about your business
+        </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="grid gap-6 md:grid-cols-2">
+
+        {/* Shop Name */}
         <div className="space-y-2">
-          <Label htmlFor="category">Service Category *</Label>
-          <select
-            id="category"
+          <Label htmlFor="shopName">Shop Name *</Label>
+          <Input
+            id="shopName"
             required
-            value={data.category}
-            onChange={(e) => handleChange("category", e.target.value as ServiceCategory)}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {serviceCategories.map((cat) => (
-              <option key={cat.value} value={cat.value}>
-                {cat.label}
-              </option>
-            ))}
-          </select>
+            value={data.shopName}
+            onChange={(e) => handleChange("shopName", e.target.value)}
+            placeholder="ABC Electricals"
+          />
         </div>
 
+        {/* Owner Name */}
         <div className="space-y-2">
-          <Label htmlFor="experience">Years of Experience *</Label>
+          <Label htmlFor="ownerName">Owner Name *</Label>
           <Input
-            id="experience"
+            id="ownerName"
+            required
+            value={data.ownerName}
+            onChange={(e) => handleChange("ownerName", e.target.value)}
+            placeholder="Ramesh Kumar"
+          />
+        </div>
+
+        {/* Start Year */}
+        <div className="space-y-2">
+          <Label htmlFor="startYear">Year of Start Work *</Label>
+          <Input
+            id="startYear"
             type="number"
             required
-            min="0"
-            value={data.experience}
-            onChange={(e) => handleChange("experience", e.target.value)}
-            placeholder="5"
+            min="1900"
+            max={new Date().getFullYear()}
+            value={data.startYear}
+            onChange={(e) => handleChange("startYear", e.target.value)}
+            placeholder="2018"
           />
         </div>
 
+        {/* Service Range */}
         <div className="space-y-2">
-          <Label htmlFor="description">Service Description *</Label>
-          <Textarea
-            id="description"
+          <Label htmlFor="serviceRange">Service Range (KM) *</Label>
+          <Input
+            id="serviceRange"
+            type="number"
             required
-            value={data.description}
-            onChange={(e) => handleChange("description", e.target.value)}
-            placeholder="Describe your services, specializations, and what makes you unique..."
-            rows={4}
+            min="1"
+            value={data.serviceRange}
+            onChange={(e) =>
+              handleChange("serviceRange", e.target.value)
+            }
+            placeholder="10"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label>Service Areas *</Label>
-          <div className="flex gap-2">
-            <Input
-              value={newArea}
-              onChange={(e) => setNewArea(e.target.value)}
-              placeholder="Enter area name"
-              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addServiceArea())}
-            />
-            <Button type="button" onClick={addServiceArea} variant="outline">
-              Add
-            </Button>
-          </div>
-          {data.serviceAreas.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {data.serviceAreas.map((area) => (
-                <span
-                  key={area}
-                  className="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-3 py-1 text-sm text-indigo-800"
+        {/* Categories */}
+        <div className="space-y-4 md:col-span-2">
+          <Label>Service Categories *</Label>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {serviceCategories.map((cat) => {
+              const isSelected = data.category.includes(cat.value)
+
+              return (
+                <label
+                  key={cat.value}
+                  className={`flex items-center gap-2 border rounded-lg px-3 py-2 cursor-pointer transition-all
+                    ${
+                      isSelected
+                        ? "border-indigo-600 bg-indigo-50 text-indigo-700"
+                        : "border-gray-300 hover:border-indigo-400"
+                    }
+                  `}
                 >
-                  {area}
-                  <button
-                    type="button"
-                    onClick={() => removeServiceArea(area)}
-                    className="ml-1 rounded-full hover:bg-indigo-200"
-                  >
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </span>
-              ))}
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => {
+                      if (isSelected) {
+                        handleChange(
+                          "category",
+                          data.category.filter(
+                            (c) => c !== cat.value
+                          )
+                        )
+                      } else {
+                        handleChange("category", [
+                          ...data.category,
+                          cat.value,
+                        ])
+                      }
+                    }}
+                    className="accent-indigo-600"
+                  />
+                  {cat.label}
+                </label>
+              )
+            })}
+          </div>
+
+          {/* Show Custom Input if Other Selected */}
+          {data.category.includes("other") && (
+            <div className="mt-4 space-y-3">
+              <Label>Add Custom Service</Label>
+
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter custom service"
+                  value={newCustom}
+                  onChange={(e) => setNewCustom(e.target.value)}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (
+                      newCustom.trim() &&
+                      !data.customCategory.includes(
+                        newCustom.trim()
+                      )
+                    ) {
+                      handleChange("customCategory", [
+                        ...data.customCategory,
+                        newCustom.trim(),
+                      ])
+                      setNewCustom("")
+                    }
+                  }}
+                >
+                  Add
+                </Button>
+              </div>
+
+              {/* Custom Category Badges */}
+              {data.customCategory.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {data.customCategory.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm"
+                    >
+                      ✔ {item}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleChange(
+                            "customCategory",
+                            data.customCategory.filter(
+                              (c) => c !== item
+                            )
+                          )
+                        }
+                        className="ml-1 text-red-500 hover:text-red-700"
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
-          {data.serviceAreas.length === 0 && (
-            <p className="text-sm text-red-600">Please add at least one service area</p>
+
+          {data.category.length === 0 && (
+            <p className="text-sm text-red-600">
+              Please select at least one category
+            </p>
           )}
         </div>
+
       </div>
 
+      {/* Buttons */}
       <div className="flex justify-between">
-        <Button type="button" onClick={onBack} variant="outline" size="lg">
+        <Button
+          type="button"
+          onClick={onBack}
+          variant="outline"
+          size="lg"
+        >
           Back
         </Button>
-        <Button type="submit" size="lg" className="min-w-32" disabled={data.serviceAreas.length === 0}>
+
+        <Button
+          type="submit"
+          size="lg"
+          className="min-w-32"
+          disabled={data.category.length === 0}
+        >
           Next
         </Button>
       </div>
+
     </form>
   )
 }

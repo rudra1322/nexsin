@@ -1,3 +1,7 @@
+// ======================================================
+// SERVICE CATEGORIES
+// ======================================================
+
 export type ServiceCategory =
   | "electrician"
   | "plumber"
@@ -8,24 +12,48 @@ export type ServiceCategory =
   | "pest-control"
   | "other"
 
-export type ApplicationStatus = "pending" | "approved" | "rejected" | "under-review"
+
+// ======================================================
+// APPLICATION STATUS
+// ======================================================
+
+export type ApplicationStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "under-review"
+
+
+// ======================================================
+// PERSONAL DETAILS
+// ======================================================
 
 export interface PersonalDetails {
-  fullName: string
+  name: string
   email: string
-  phone: string
-  address: string
-  city: string
-  state: string
-  pincode: string
+  createPassword: string
+  confirmPassword: string
 }
 
+
+// ======================================================
+// SERVICE DETAILS (MULTI-SELECT CATEGORY)
+// ======================================================
+
 export interface ServiceDetails {
-  category: ServiceCategory
-  experience: string
-  serviceAreas: string[]
-  description: string
+  shopName: string
+  ownerName: string
+  startYear: string
+  category: ServiceCategory[]
+  customCategory: string[]   // 👈 NEW
+  serviceRange: string
 }
+
+
+
+// ======================================================
+// DOCUMENTS (FILE STATE)
+// ======================================================
 
 export interface Documents {
   aadhaarFront: File | null
@@ -35,12 +63,22 @@ export interface Documents {
   profilePhoto: File | null
 }
 
+
+// ======================================================
+// BANK DETAILS
+// ======================================================
+
 export interface BankDetails {
   accountHolderName: string
   accountNumber: string
   ifscCode: string
   bankName: string
 }
+
+
+// ======================================================
+// FULL PROVIDER APPLICATION STRUCTURE
+// ======================================================
 
 export interface ProviderApplication {
   id: string
