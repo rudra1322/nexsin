@@ -190,21 +190,35 @@ const CardNav: React.FC<CardNavProps> = ({
 
           {/* Buttons + Avatar */}
           <div className="nav-buttons">
+            {navButtons.map((btn, i) => (
+              <button
+                key={i}
+                onClick={goToLoginPage}
+                className="card-nav-cta-button"
+                style={{
+                  backgroundColor: btn.bgColor || buttonBgColor,
+                  color: btn.textColor || buttonTextColor,
+                  marginLeft: "0.5rem",
+                }}
+              >
+                {btn.label}
+              </button>
+            ))}
 
-            {/* Right Side 3-Line Icon */}
-            <div
-              className="profile-hamburger"
-              onClick={() => console.log("Right menu clicked")}
-              role="button"
-              tabIndex={0}
-            >
-              <div className="profile-line" />
-              <div className="profile-line" />
-              <div className="profile-line" />
-            </div>
-
+            {/* ✅ Avatar Wrapper */}
+            {UploadAvatarComponent && (
+              <div
+                style={{
+                  pointerEvents: "auto",
+                  position: "relative",
+                  zIndex: 1000,
+                  marginLeft: "0.5rem",
+                }}
+              >
+                {UploadAvatarComponent}
+              </div>
+            )}
           </div>
-
         </div>
 
         {/* Cards Section */}

@@ -1,4 +1,7 @@
-/* ====================== CARD NAVIGATION BASE ====================== */
+/* ======================
+   CARD NAVIGATION BASE
+   ====================== */
+
 .card-nav-container {
   position: fixed;
   top: 1rem;
@@ -77,29 +80,6 @@
 .hamburger-menu.open .hamburger-line:last-child {
   transform: translateY(-6px) rotate(-45deg);
 }
-
-.profile-hamburger {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-
-.profile-hamburger:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.profile-line {
-  width: 22px;
-  height: 2px;
-  background-color: #ffffff;
-  transition: all 0.3s ease;
-}
-
 
 /* ---------------------- */
 /* CTA BUTTON */
