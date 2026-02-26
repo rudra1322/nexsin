@@ -25,6 +25,7 @@ import {
   ShieldCheck,
   Phone,
 } from "lucide-react";
+import Image from "next/image";
 
 
 
@@ -130,8 +131,10 @@ export default function LoginPage() {
           </div>
 
           <div className="relative pt-6">
-            <img
+            <Image
               src="/login-illustration.png"
+              width={200}
+              height={200}
               alt="Service Platform Illustration"
               className="relative w-[300px] xl:w-[500px] max-w-full opacity-95"
             />
