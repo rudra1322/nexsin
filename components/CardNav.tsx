@@ -158,7 +158,7 @@ const CardNav: React.FC<CardNavProps> = ({
         <div className="card-nav-top">
           {/* Hamburger */}
           <div
-            className={`hamburger-menu ${isHamburgerOpen ? "open" : ""}`}
+            className={`hamburger-menu ${isHamburgerOpen ? "open" : ""}`}  //hii
             onClick={toggleMenu}
             role="button"
             aria-label={isExpanded ? "Close menu" : "Open menu"}
