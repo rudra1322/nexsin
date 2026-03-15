@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -6,7 +5,6 @@ import './globals.css'
 const inter = Inter({
   subsets: ["latin"],
   display: "swap", // optional, keeps text visible
-  adjustFontFallback: false, // helps avoid network fetch errors
 });
 
 export const metadata: Metadata = {
@@ -20,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -29,9 +27,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-      
       </body>
-
     </html>
   )
 }

@@ -1,6 +1,16 @@
 "use client";
 
-import { Plus, Check } from "lucide-react";
+import {
+  Plus,
+  Check,
+  Search,
+  Zap,
+  Snowflake,
+  Paintbrush,
+  Sprout,
+  Star,
+  Users
+} from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -68,6 +78,13 @@ const services: Service[] = [
   },
 ];
 
+const popularServices = [
+  { icon: Zap, name: "Electrician" },
+  { icon: Snowflake, name: "AC Repair" },
+  { icon: Paintbrush, name: "Painter" },
+  { icon: Sprout, name: "Gardener" },
+];
+
 export function ServicesGrid() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const router = useRouter();
@@ -83,8 +100,64 @@ export function ServicesGrid() {
     .reduce((sum, s) => sum + s.price, 0);
 
   return (
-    <section id="services" className="py-32 bg-[#0B1220] text-white">
+    <section id="services" className="pt-20 bg-[#0B1220] text-white">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
+        
+        {/* POPULAR SERVICES */}
+        <h3 className="text-2xl font-semibold mt-12">
+            Popular services
+        </h3>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-16 mb-12 items-center">
+
+          {/* LEFT - SERVICES */}
+          <div className="grid grid-cols-2 gap-6">
+
+            {popularServices.map((item, i) => (
+              <div
+                key={i}
+                className="bg-[#0F172A] border border-white/10 aspect-square rounded-xl flex flex-col items-center justify-center hover:border-white/20 hover:-translate-y-1 transition"
+              >
+                <item.icon size={26} className="mb-2" />
+                <span className="text-sm text-slate-300">{item.name}</span>
+              </div>
+            ))}
+
+          </div>
+
+          {/* RIGHT SIDE */}
+          <div className="grid grid-cols-2 grid-rows-2 gap-6">
+            <div className="bg-[#0F172A] h-[260px] rounded-xl border border-white/10" />
+            <div className="bg-[#0F172A] rounded-xl border border-white/10 row-span-2" />
+            <div className="bg-[#0F172A] h-[260px] rounded-xl border border-white/10" />
+
+          </div>
+
+        </div>
+
+        <div className="flex gap-16 mb-16">
+
+          <div>
+            <div className="flex items-center gap-2 text-lg">
+              <Star className="text-yellow-400" size={18}/>
+              <span>4.5</span>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              SERVICE RATING
+            </p>
+          </div>
+
+          <div>
+            <div className="flex items-center gap-2 text-lg">
+              <Users size={18}/>
+              <span>4.5 m</span>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              Customer Globally
+            </p>
+          </div>
+
+        </div>
 
         {/* HEADER */}
         <div className="text-center max-w-[640px] mx-auto mb-20">
@@ -96,70 +169,111 @@ export function ServicesGrid() {
           </p>
         </div>
 
-        {/* GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {services.map((service) => {
-            const isSelected = selectedServices.includes(service.id);
+        {/* CATEGORY SECTION */}
 
-            return (
-              <div
-                key={service.id}
-                className="group bg-[#0F172A] rounded-xl overflow-hidden border border-white/10 hover:border-white/20 transition-all"
-              >
-                {/* IMAGE */}
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={service.imageUrl}
-                    alt={service.name}
-                    fill
-                    className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                  />
-                  {service.popular && (
-                    <span className="absolute top-4 right-4 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full">
-                      Popular
-                    </span>
-                  )}
-                </div>
+        <div className="mb-16">
 
-                {/* CONTENT */}
-                <div className="p-6">
-                  <h3 className="mb-2 text-xl font-semibold">
-                    {service.name}
-                  </h3>
+        <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold">Home repair & installation</h3>
+        <button className="text-slate-400">see more →</button>
+        </div>
 
-                  <p className="text-sm text-slate-300 mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                  <div className="flex justify-between items-center mb-5 text-sm text-slate-400">
-                    <span>{service.duration}</span>
-                    <span className="text-xl font-semibold text-white">
-                      ${service.price}
-                    </span>
-                  </div>
+        {services.slice(0,3).map((service) => (
 
-                  <button
-                    onClick={() => toggleService(service.id)}
-                    className={`w-full h-11 rounded-lg flex items-center justify-center gap-2 font-medium transition-all ${
-                      isSelected
-                        ? "bg-emerald-500 text-white"
-                        : "border border-white/20 text-white hover:bg-white/10"
-                    }`}
-                  >
-                    {isSelected ? (
-                      <>
-                        <Check size={18} /> Added
-                      </>
-                    ) : (
-                      <>
-                        <Plus size={18} /> Add Service
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+        <div
+        key={service.id}
+        className="bg-[#0F172A] rounded-lg border border-white/10 overflow-hidden hover:-translate-y-1 hover:border-white/30 transition"
+        >
+
+        <div className="relative h-[160px]">
+        <Image
+        src={service.imageUrl}
+        alt={service.name}
+        fill
+        className="object-cover"
+        />
+        </div>
+
+        <div className="p-4">
+        <h4 className="font-medium">{service.name}</h4>
+        <p className="text-sm text-slate-400">{service.duration}</p>
+        <p className="text-sm font-semibold">${service.price}</p>
+        </div>
+
+        </div>
+
+        ))}
+
+        </div>
+
+        </div>
+
+
+        <div className="mb-16">
+
+        <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold">Salon for women</h3>
+        <button className="text-slate-400">see more →</button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.slice(3,6).map((service) => (
+
+        <div
+        key={service.id}
+        className="bg-[#0F172A] rounded-lg border border-white/10 overflow-hidden"
+        >
+
+        <div className="relative h-[160px]">
+        <Image src={service.imageUrl} alt={service.name} fill className="object-cover"/>
+        </div>
+
+        <div className="p-4">
+        <h4 className="font-medium">{service.name}</h4>
+        <p className="text-sm text-slate-400">{service.duration}</p>
+        <p className="text-sm font-semibold">${service.price}</p>
+        </div>
+
+        </div>
+
+        ))}
+        </div>
+
+        </div>
+
+
+        <div className="mb-20">
+
+        <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold">Cleaning Essentials</h3>
+        <button className="text-slate-400">see more →</button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.slice(0,3).map((service) => (
+
+        <div
+        key={service.id}
+        className="bg-[#0F172A] rounded-lg border border-white/10 overflow-hidden"
+        >
+
+        <div className="relative h-[260px]">
+        <Image src={service.imageUrl} alt={service.name} fill className="object-cover"/>
+        </div>
+
+        <div className="p-4">
+        <h4 className="font-medium">{service.name}</h4>
+        <p className="text-sm text-slate-400">{service.duration}</p>
+        <p className="text-sm font-semibold">${service.price}</p>
+        </div>
+
+        </div>
+
+        ))}
+        </div>
+
         </div>
 
         {/* BOOKING BAR */}

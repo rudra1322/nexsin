@@ -39,59 +39,84 @@ export default function HomePage() {
   const services = [
     {
       name: "Cooler Repair",
-      icon: Snowflake,
-        image: "/cooler.png",
+      image: "/cooler.png",
       description: "AC & Cooler maintenance",
-      color: "bg-[#E3F2FD] text-[#007BFF]",
+      duration: "1-2 hrs",
+      price: "₹249",
+      // rating: "4.6",
+      reviews: "11,234",
+      popular: false,
     },
     {
       name: "Laptop Repair",
-      icon: Laptop,
-        image: "/laptop.png",
+      image: "/laptop.png",
       description: "Computer & laptop fixes",
-      color: "bg-[#F3E5F5] text-[#9C27B0]",
+      duration: "1-2 hrs",
+      price: "₹249",
+      // rating: "4.6",
+      reviews: "11,234",
+      popular: false,
     },
     {
       name: "Car Mechanic",
-      icon: Car,
-        image: "/car.jpg",  
+      image: "/car.jpg",
       description: "Auto repair services",
-      color: "bg-[#FFEBEE] text-[#F44336]",
+      duration: "1-2 hrs",
+      price: "₹249",
+      // rating: "4.6",
+      reviews: "11,234",
+      popular: false,
     },
     {
-      name: "Plumber",
-      icon: Droplets,
-        image: "/plumber.png",
-      description: "Water & pipe solutions",
-      color: "bg-[#E0F2F1] text-[#00BCD4]",
+      name: "Plumbing Services",
+      image: "/plumber.png",
+      description:
+        "Expert plumber for leaks, installations, and drain cleaning",
+      duration: "1-2 hrs",
+      price: "₹249",
+      // rating: "4.6",
+      reviews: "11,234",
+      popular: false,
     },
     {
-      name: "Electrician",
-      icon: Zap,
-        image: "/electrician.png",
-      description: "Electrical installations",
-      color: "bg-[#FFF8E1] text-[#FF9800]",
+      name: "Electrician Services",
+      image: "/electrician.png",
+      description: "Licensed electrician for wiring and electrical repairs",
+      duration: "1-2 hrs",
+      price: "₹199",
+      // rating: "4.7",
+      reviews: "9,876",
+      popular: false,
     },
     {
-      name: "AC Service",
-      icon: Snowflake,
-        image: "/ac.png",
-      description: "Air conditioning repair",
-      color: "bg-[#E8EAF6] text-[#3F51B5]",
+      name: "AC Service & Repair",
+      image: "/ac.png",
+      description: "Complete AC maintenance, repair, and installation services",
+      duration: "1-2 hrs",
+      price: "₹349",
+      // rating: "4.8",
+      reviews: "7,845",
+      popular: true,
     },
     {
       name: "Carpenter",
-      icon: Hammer,
-        image: "/carpenter.png",
+      image: "/carpenter.png",
       description: "Wood work & furniture",
-      color: "bg-[#FFF3E0] text-[#FF5722]",
+      duration: "1-2 hrs",
+      price: "₹349",
+      // rating: "4.8",
+      reviews: "7,845",
+      popular: true,
     },
     {
       name: "Painter",
-      icon: Paintbrush,
-        image: "/penter.png",
+      image: "/penter.png",
       description: "Interior & exterior painting",
-      color: "bg-[#E8F5E8] text-[#4CAF50]",
+      duration: "1-2 hrs",
+      price: "₹249",
+      // rating: "4.6",
+      reviews: "11,234",
+      popular: false,
     },
   ];
 
@@ -118,8 +143,16 @@ export default function HomePage() {
       bgColor: "#0D0716",
       textColor: "#fff",
       links: [
-        { label: "Company", href: "/information/about", ariaLabel: "About Company" },
-        { label: "Careers", href: "/information/careers", ariaLabel: "About Careers" },
+        {
+          label: "Company",
+          href: "/information/about",
+          ariaLabel: "About Company",
+        },
+        {
+          label: "Careers",
+          href: "/information/careers",
+          ariaLabel: "About Careers",
+        },
       ],
     },
     {
@@ -233,7 +266,7 @@ export default function HomePage() {
 
                 <Button
                   size="lg"
-                  className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-[#00C49A] hover:bg-[#00B894] text-sm sm:text-base"
+                  className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-blue-600 hover:bg-blue-700 text-sm sm:text-base"
                 >
                   Find Services
                 </Button>
@@ -277,86 +310,97 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-{/* Services Section */}
-<section id="services" className="py-12 lg:py-20 bg-[#0F172A]">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-    {/* Header */}
-    <div className="text-center mb-12 sm:mb-16">
-      <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-        Our Services
-      </h2>
-      <p className="text-lg sm:text-xl text-[#cbd5e1] max-w-2xl mx-auto">
-        Professional repair and maintenance services for your home and office
-        needs
-      </p>
-    </div>
-
-    {/* Grid */}
-    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      {services.map((service, index) => (
-        <Card
-          key={index}
-          className="group bg-white border-0 shadow-md
-                     hover:shadow-xl transition-all duration-300
-                     hover:-translate-y-2 cursor-pointer"
-          role="link"
-          tabIndex={0}
-          onClick={() => router.push("/login")}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              router.push("/login");
-            }
-          }}
-        >
-          <CardContent className="p-4 sm:p-5 text-center">
-
-            {/* SERVICE IMAGE */}
-            {service.image && (
-              <div className="relative w-full h-28 mb-4 rounded-xl overflow-hidden">
-                <Image
-                  src={service.image}
-                  alt={service.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            )}
-
-            {/* ICON */}
-            <div
-              className={`w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-3 rounded-2xl 
-                          ${service.color} flex items-center justify-center
-                          group-hover:scale-110 transition-transform`}
-            >
-              <service.icon className="h-6 w-6 sm:h-7 sm:w-7" />
-            </div>
-
-            {/* TEXT */}
-            <h3 className="text-base sm:text-lg font-semibold text-[#343A40] mb-1">
-              {service.name}
-            </h3>
-
-            <p className="text-sm text-[#6C757D] mb-3">
-              {service.description}
+      {/* Services Section */}
+      <section id="services" className="py-12 lg:py-20 bg-[#0F172A]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
+              Our Services
+            </h2>
+            <p className="text-lg sm:text-xl text-[#cbd5e1] max-w-2xl mx-auto">
+              Professional repair and maintenance services for your home and
+              office needs
             </p>
+          </div>
 
-            {/* CTA */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-[#00C49A] hover:text-[#00B894]"
-            >
-              Book Now →
-            </Button>
+          {/* Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className="group relative w-full max-w-xs rounded-2xl overflow-hidden 
+             shadow-xl hover:shadow-2xl transition-all duration-500 
+             hover:-translate-y-3 cursor-pointer"
+              >
+                {/* IMAGE SECTION (75%) */}
+                <div className="relative h-[380px] ">
+                  {/* Image */}
+                  <Image
+                    src={service.image}
+                    alt={service.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
 
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  </div>
-</section>
+                  {/* Dark Overlay */}
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t 
+                    from-black/90 via-black/50 to-transparent"
+                  />
+
+                  {/* TOP CONTENT OVER IMAGE */}
+                  <div className="absolute bottom-0 p-6 text-white w-full">
+                    {/* Rating */}
+                    <div className="flex justify-between items-center mb-3">
+                      {/* {service.popular && (
+                        <span className="bg-blue-600 text-xs px-3 py-1 rounded-full">
+                          Popular
+                        </span>
+                      )} */}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-xl font-semibold mb-2">
+                      {service.name}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-200 mb-4 line-clamp-2">
+                      {service.description}
+                    </p>
+
+                    {/* Duration + Verified */}
+                    <div className="flex items-center text-sm text-gray-300 mb-3">
+                      <Clock className="h-4 w-4 mr-1" />
+                      {service.duration}
+                      <span className="mx-2">•</span>
+                      <Shield className="h-4 w-4 mr-1 text-green-400" />
+                      Verified
+                    </div>
+
+                    {/* Price + Button */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-gray-300">Starting from</p>
+                        <p className="text-xl font-bold">{service.price}</p>
+                      </div>
+
+                      <button
+                        className="bg-blue-600 hover:bg-blue-700 
+                           px-4 py-2 rounded-lg text-sm 
+                           transition-all duration-300"
+                      >
+                        Book Now →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* How It Works */}
       <section
@@ -425,7 +469,7 @@ export default function HomePage() {
                     className="flex items-start space-x-3 sm:space-x-4"
                   >
                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#E3F2FD] rounded-xl flex items-center justify-center flex-shrink-0">
-                      <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 text-[#007BFF]" />
+                      <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 text-[#0F172A]" />
                     </div>
                     <div>
                       <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">
@@ -461,7 +505,7 @@ export default function HomePage() {
       </section>
 
       {/* Customer Testimonials */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-[#1e3a8a]">
+      <section className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -495,7 +539,7 @@ export default function HomePage() {
               {
                 name: "Sarah Johnson",
                 role: "Homeowner",
-               
+
                 review:
                   "Amazing service! The plumber arrived exactly on time and fixed our kitchen sink issue in under an hour. Professional, clean, and reasonably priced.",
                 service: "Plumbing Service",
@@ -505,7 +549,7 @@ export default function HomePage() {
               {
                 name: "Mike Chen",
                 role: "Business Owner",
-             
+
                 review:
                   "My laptop was completely dead, but the technician brought it back to life! Quick diagnosis, fair pricing, and excellent communication throughout.",
                 service: "Laptop Repair",
@@ -515,7 +559,7 @@ export default function HomePage() {
               {
                 name: "Emily Rodriguez",
                 role: "Apartment Renter",
-               
+
                 review:
                   "The electrician was incredibly knowledgeable and solved our power outlet issues safely. I'll definitely use FixMate again for future repairs.",
                 service: "Electrical Service",
@@ -525,7 +569,7 @@ export default function HomePage() {
               {
                 name: "Robert Williams",
                 role: "Retiree",
-               
+
                 review:
                   "Our AC broke down during a heatwave. FixMate got someone out the same day and had us cool again within 2 hours. Lifesavers!",
                 service: "AC Repair",
@@ -535,7 +579,7 @@ export default function HomePage() {
               {
                 name: "Jessica Park",
                 role: "Marketing Manager",
-              
+
                 review:
                   "The carpenter did an amazing job fixing our kitchen cabinets. Attention to detail was perfect and the pricing was very transparent.",
                 service: "Carpentry",
@@ -545,7 +589,7 @@ export default function HomePage() {
               {
                 name: "David Kumar",
                 role: "Software Engineer",
-              
+
                 review:
                   "Needed my car serviced urgently before a road trip. The mechanic was thorough, honest about what needed fixing, and got me back on the road safely.",
                 service: "Auto Repair",
@@ -563,7 +607,7 @@ export default function HomePage() {
                       src="/placeholder.svg"
                       alt={testimonial.name}
                       width={48}
-                      height={48}
+                      height={460}
                       className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover mr-3 sm:mr-4"
                     />
                     <div>
@@ -731,13 +775,13 @@ export default function HomePage() {
                             if (index < rating) {
                               star.classList.add(
                                 "text-yellow-400",
-                                "fill-current"
+                                "fill-current",
                               );
                               star.classList.remove("text-gray-300");
                             } else {
                               star.classList.remove(
                                 "text-yellow-400",
-                                "fill-current"
+                                "fill-current",
                               );
                               star.classList.add("text-gray-300");
                             }
@@ -900,7 +944,7 @@ export default function HomePage() {
                     Careers
                   </a>
                 </li>
-                
+
                 <li>
                   <a
                     href="/legal/terms"
