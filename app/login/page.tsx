@@ -23,7 +23,9 @@ import {
   Lock,
   Loader2,
   ShieldCheck,
+
   Phone,
+
 } from "lucide-react";
 import Image from "next/image";
 
@@ -39,6 +41,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<"user" | "pro">("user");
+  const [email, setEmail] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +49,8 @@ export default function LoginPage() {
  
   const [error, setError] = useState<string | null>(null);
 
+
+  /* SESSION CHECK */
 
   useEffect(() => {
     const checkSession = async () => {
@@ -57,24 +62,7 @@ export default function LoginPage() {
     checkSession();
   }, [router]);
 
-
-  /* 
-     SUPABASE SESSION CHECK (GOOGLE)
-  */
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        router.replace("/home");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [router]);
-
-  /* 
-     EMAIL / PASSWORD LOGIN*/
+  /* LOGIN */
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,6 +70,10 @@ export default function LoginPage() {
     setError(null);
 
     try {
+
+      // Replace with your real backend login
+      router.replace(activeTab === "pro" ? "/pro/home" : "/home");
+
       await new Promise((res) => setTimeout(res, 1200));
       router.replace(activeTab === "pro" ? "/providerdashboard" : "/home");
     } catch {
@@ -92,6 +84,7 @@ export default function LoginPage() {
   };
 
   return (
+
     <main className="relative min-h-screen bg-[#0B1426] flex items-center justify-center px-4 overflow-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
@@ -318,6 +311,7 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </div>
+
     </main>
   );
 }

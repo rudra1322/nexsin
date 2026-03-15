@@ -298,6 +298,10 @@ export default function UploadAvatars() {
       `}</style>
     </>
   );
+<<<<<<< HEAD:components/ui/UploadAvatars.tsx
+}
+=======
 }
 
 
+>>>>>>> b2fe86cc6133dbf55635c0e56680206b906a0fb5:components/ui/sliderAvtar.tsx
