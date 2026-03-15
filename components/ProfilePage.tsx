@@ -1,18 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const defaultAvatar = "/defaultcharacter.png";
+import { Menu } from "lucide-react";
 
 export default function ProfilePage({
-  avatarSrc,
-  setAvatarSrc,
   onClose,
 }: {
-  avatarSrc: string;
-  setAvatarSrc: React.Dispatch<React.SetStateAction<string>>;
   onClose: () => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -20,13 +14,13 @@ export default function ProfilePage({
   const [showEdit, setShowEdit] = useState(false);
 
   const [form, setForm] = useState({
-    fullName: "Abhi Yadav",
-    username: "abhi123",
-    email: "abhi@example.com",
-    phone: "9876543210",
-    address: "Your address here",
-    bio: "Write something about yourself...",
-    gender: "Male",
+    fullName: "",
+    username: "",
+    email: "",
+    phone: "",
+    address: "",
+    bio: "",
+    gender: "",
   });
 
   const handleChange = (
@@ -35,16 +29,11 @@ export default function ProfilePage({
     setForm({ ...form, [e.target.id]: e.target.value });
   };
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const imgURL = URL.createObjectURL(file);
-      setAvatarSrc(imgURL);
-    }
-  };
+
+
 
   const handleAvatarRemove = () => {
-    setAvatarSrc(defaultAvatar);
+
   };
 
   return (
@@ -91,13 +80,11 @@ export default function ProfilePage({
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
-            <Image
-              src={avatarSrc || defaultAvatar}
-              alt="avatar"
-              width={160}
-              height={160}
-              className="rounded-full border-4 border-indigo-500 shadow-xl object-cover"
-            />
+
+
+            {/* this is the menu icno */}
+            <Menu/>          
+
           </motion.div>
 
           <div className="flex gap-4 mt-5">
@@ -120,7 +107,6 @@ export default function ProfilePage({
             type="file"
             accept="image/*"
             ref={fileInputRef}
-            onChange={handleAvatarUpload}
             className="hidden"
           />
         </div>

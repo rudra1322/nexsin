@@ -2,10 +2,15 @@
 
 import React, { useRef } from "react";
 import CardNav, { CardNavItem } from "@/components/CardNav";
-import UploadAvatars from "@/components/ui/UploadAvatars";
-import { Hero } from "@/components/Hero";
+
+
 import { ServicesGrid } from "@/components/ServicesGrid";
-import { FinalCTA } from "@/components/finalCTA";
+
+
+
+
+
+
 
 /* FOOTER ICONS */
 import {
@@ -17,6 +22,10 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
+
+
+
+
 
 /* ---------------- NAV ITEMS ---------------- */
 const items: CardNavItem[] = [
@@ -51,15 +60,13 @@ const items: CardNavItem[] = [
 ];
 
 export default function HomePage() {
-  const [avatarSrc, setAvatarSrc] = React.useState("/defaultcharacter.png");
+
   const [searchQuery, setSearchQuery] = React.useState("");
 
   // 🔥 ref for scrolling
   const servicesRef = useRef<HTMLDivElement>(null);
 
-  const scrollToServices = () => {
-    servicesRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+
 
   return (
     <div
@@ -77,9 +84,6 @@ export default function HomePage() {
         buttonTextColor="#fff"
         showSearch
         onSearch={(query) => setSearchQuery(query)}
-        UploadAvatarComponent={
-          <UploadAvatars avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc} />
-        }
       />
 
      
