@@ -3,14 +3,7 @@
 import React, { useRef } from "react";
 import CardNav, { CardNavItem } from "@/components/CardNav";
 
-
 import { ServicesGrid } from "@/components/ServicesGrid";
-
-
-
-
-
-
 
 /* FOOTER ICONS */
 import {
@@ -22,11 +15,10 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/button";
 
-
-
-
-
+const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 /* ---------------- NAV ITEMS ---------------- */
 const items: CardNavItem[] = [
   {
@@ -34,7 +26,11 @@ const items: CardNavItem[] = [
     bgColor: "#0D0716",
     textColor: "#fff",
     links: [
-      { label: "Company", href: "/information/about", ariaLabel: "About Company" },
+      {
+        label: "Company",
+        href: "/information/about",
+        ariaLabel: "About Company",
+      },
       { label: "Careers", href: "/information/careers", ariaLabel: "Careers" },
     ],
   },
@@ -54,19 +50,33 @@ const items: CardNavItem[] = [
     links: [
       { label: "Email", href: "/email", ariaLabel: "Email" },
       { label: "Twitter", href: "/twitter", ariaLabel: "Twitter" },
-      { label: "LinkedIn", href: "/linkedin", ariaLabel: "LinkedIn" },
     ],
   },
 ];
 
 export default function HomePage() {
-
   const [searchQuery, setSearchQuery] = React.useState("");
+  const router = useRouter();
 
   // 🔥 ref for scrolling
   const servicesRef = useRef<HTMLDivElement>(null);
 
+  const logout = async () => {
+    try {
+      // 🔥 1. Supabase logout
 
+      // 🔥 2. Backend logout
+      await fetch(`${API}/api/users/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      // 🔥 3. Redirect
+      router.replace("/");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
 
   return (
     <div
@@ -85,19 +95,19 @@ export default function HomePage() {
         showSearch
         onSearch={(query) => setSearchQuery(query)}
       />
-
      
-
       {/* SERVICES (SCROLL TARGET) */}
       <div ref={servicesRef}>
         <ServicesGrid />
       </div>
-
+      
 
       {/* FOOTER (NO EXTRA GAP) */}
       <footer className="bg-[#0f172a] text-white py-12 sm:py-16">
+         <Button
+      onClick={logout}
+      > this is logout button</Button>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -105,7 +115,8 @@ export default function HomePage() {
                 <span className="text-2xl font-bold">Nexcyn</span>
               </div>
               <p className="text-slate-300 text-sm mb-4">
-                Your trusted partner for all home repair and maintenance services.
+                Your trusted partner for all home repair and maintenance
+                services.
               </p>
               <div className="flex gap-4">
                 <Facebook className="h-5 w-5 text-slate-400 hover:text-white" />

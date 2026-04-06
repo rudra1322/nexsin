@@ -38,7 +38,6 @@ const items: CardNavItem[] = [
     links: [
       { label: "Email", href: "/email", ariaLabel: "Email us" },
       { label: "Twitter", href: "/twitter", ariaLabel: "Twitter" },
-      { label: "LinkedIn", href: "/linkedin", ariaLabel: "LinkedIn" },
     ],
   },
 ];
