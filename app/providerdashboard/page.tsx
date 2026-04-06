@@ -222,7 +222,7 @@ export default function ServiceDashboardPage() {
 
         {/* FOOTER */}
         <div className="pt-6 text-center text-xs text-gray-500">
-          Powered by <span className="text-blue-400 font-medium">Nexsin</span>
+          Powered by <span className="text-blue-400 font-medium">Nexcyn</span>
         </div>
       </div>
     </DashboardLayout>

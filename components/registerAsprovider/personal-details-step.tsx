@@ -1,11 +1,12 @@
 "use client"
 
 import type React from "react"
-
+import { useState } from "react"
 import type { PersonalDetails } from "@/types/provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Eye, EyeOff } from "lucide-react"
 
 interface PersonalDetailsStepProps {
   data: PersonalDetails
@@ -13,9 +14,23 @@ interface PersonalDetailsStepProps {
   onNext: () => void
 }
 
-export function PersonalDetailsStep({ data, onUpdate, onNext }: PersonalDetailsStepProps) {
+export function PersonalDetailsStep({
+  data,
+  onUpdate,
+  onNext,
+}: PersonalDetailsStepProps) {
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (data.createPassword !== data.confirmPassword) {
+      alert("Passwords do not match")
+      return
+    }
+
     onNext()
   }
 
@@ -26,22 +41,29 @@ export function PersonalDetailsStep({ data, onUpdate, onNext }: PersonalDetailsS
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Personal Details</h2>
-        <p className="mt-1 text-sm text-gray-600">Please provide your accurate personal information</p>
+        <h2 className="text-2xl font-bold text-gray-900">
+          Create Account
+        </h2>
+        <p className="mt-1 text-sm text-gray-600">
+          Please enter your basic details
+        </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="space-y-4">
+
+        {/* Name */}
         <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name *</Label>
+          <Label htmlFor="name">Full Name *</Label>
           <Input
-            id="fullName"
+            id="name"
             required
-            value={data.fullName}
-            onChange={(e) => handleChange("fullName", e.target.value)}
+            value={data.name}
+            onChange={(e) => handleChange("name", e.target.value)}
             placeholder="John Doe"
           />
         </div>
 
+        {/* Email */}
         <div className="space-y-2">
           <Label htmlFor="email">Email Address *</Label>
           <Input
@@ -54,61 +76,58 @@ export function PersonalDetailsStep({ data, onUpdate, onNext }: PersonalDetailsS
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number *</Label>
+        {/* Create Password */}
+        <div className="space-y-2 relative">
+          <Label htmlFor="createPassword">Create Password *</Label>
           <Input
-            id="phone"
-            type="tel"
+            id="createPassword"
+            type={showPassword ? "text" : "password"}
             required
-            value={data.phone}
-            onChange={(e) => handleChange("phone", e.target.value)}
-            placeholder="+91 98765 43210"
+            value={data.createPassword}
+            onChange={(e) =>
+              handleChange("createPassword", e.target.value)
+            }
+            placeholder="Enter password"
+            className="pr-10"
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-800"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="pincode">Pincode *</Label>
+        {/* Confirm Password */}
+        <div className="space-y-2 relative">
+          <Label htmlFor="confirmPassword">Confirm Password *</Label>
           <Input
-            id="pincode"
+            id="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
             required
-            value={data.pincode}
-            onChange={(e) => handleChange("pincode", e.target.value)}
-            placeholder="110001"
+            value={data.confirmPassword}
+            onChange={(e) =>
+              handleChange("confirmPassword", e.target.value)
+            }
+            placeholder="Re-enter password"
+            className="pr-10"
           />
+          <button
+            type="button"
+            onClick={() =>
+              setShowConfirmPassword(!showConfirmPassword)
+            }
+            className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-800"
+          >
+            {showConfirmPassword ? (
+              <EyeOff size={18} />
+            ) : (
+              <Eye size={18} />
+            )}
+          </button>
         </div>
 
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="address">Address *</Label>
-          <Input
-            id="address"
-            required
-            value={data.address}
-            onChange={(e) => handleChange("address", e.target.value)}
-            placeholder="Street address"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="city">City *</Label>
-          <Input
-            id="city"
-            required
-            value={data.city}
-            onChange={(e) => handleChange("city", e.target.value)}
-            placeholder="New Delhi"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="state">State *</Label>
-          <Input
-            id="state"
-            required
-            value={data.state}
-            onChange={(e) => handleChange("state", e.target.value)}
-            placeholder="Delhi"
-          />
-        </div>
       </div>
 
       <div className="flex justify-end">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   GoogleMap,
@@ -204,7 +204,7 @@ const computeRoute = async (from: LatLng, to: LatLng) => {
       }, 200);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pickup, drop]);
+  }, [pickup, drop])
 
   // Autocomplete place changed handlers
   const onPickupLoad = (ac: google.maps.places.Autocomplete | null) => {

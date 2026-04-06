@@ -15,265 +15,301 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, Wrench, Mail, Lock } from "lucide-react";
-import { GoogleIcon } from "./CustomIcons";
-import MuiButton from "@mui/material/Button";
-import { signIn } from "next-auth/react";
 
+import { Eye, EyeOff, Mail, Lock, Loader2, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+
+import GoogleAuthButton from "@/lib/google";
+
+const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+
+  const [activeTab, setActiveTab] = useState<"user" | "pro">("user");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
 
-  const goToHomePage = () => {
-    router.push("/home"); 
+  /* EMAIL/PASSWORD LOGIN */
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setIsSubmitting(true);
+
+      const res = await fetch(`${API}/api/users/login`, {
+        method: "POST",
+        credentials: "include", // 🔥 important
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: identifier, password }),
+      });
+
+      let data;
+
+      try {
+        data = await res.json();
+      } catch {
+        const text = await res.text();
+        throw new Error(text || "Invalid server response");
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      router.push("/home");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+        setError(err.message);
+      } else {
+        console.error("Something went wrong");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    if (!email || !password) {
-      setError("Please enter your email and password.");
-      return;
-    }
-    setIsSubmitting(true);
-    // Simulate login request
-    await new Promise((r) => setTimeout(r, 800));
-    setIsSubmitting(false);
-    setSuccess("Signed in successfully! Redirecting...");
-    // Redirect after a short delay
-    setTimeout(() => router.push("/"), 900);
-  }
-
   return (
-    <main className="min-h-screen bg-[#0D1117]">
-      <header className="border-b bg-[#0D1117]/30 border-[#0D1117]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Wrench className="h-6 w-6 sm:h-7 sm:w-7 text-[#007BFF]" />
-            <span className="text-xl sm:text-2xl font-bold text-white">
-              Nexcyn
-            </span>
-          </Link>
-        </div>
-      </header>
+    <main className="relative min-h-screen bg-[#0B1426] flex items-center justify-center px-4 overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+        <div className="w-[700px] h-[700px] bg-gradient-to-r from-blue-600/20 blur-3xl rounded-full" />
+      </div>
 
-      <section className="py-8 sm:py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
-          {/* Left: Brand/Benefits - Hidden on mobile for better UX */}
-          <div className=" hidden lg:block">
-            <div className="bg-[#FFFFFF]/5 rounded-2xl shadow-md p-6 lg:p-8">
-              <h1 className="text-3xl lg:text-4xl font-bold text-[#FFFFFF] mb-4">
-                Welcome back to <span className="text-[#007BFF]">Nexcyn</span>
-              </h1>
-              <p className="text-base lg:text-lg text-[#FFFFFF] mb-6">
-                Sign in to manage your bookings, track service status, and view
-                your history.
-              </p>
-              <ul className="space-y-3 text-[#343A40]">
-                <li className="text-[#FFFFFF] flex items-start gap-3">
-                  <span className=" mt-1 inline-block w-2.5 h-2.5 rounded-full bg-[#FFFFFF]"></span>
-                  10,000+ happy customers
-                </li>
-                <li className="text-[#FFFFFF] flex items-start gap-3">
-                  <span className="mt-1 inline-block w-2.5 h-2.5 rounded-full bg-[#FFFFFF]"></span>
-                  98% satisfaction rate
-                </li>
-                <li className="text-[#FFFFFF] flex items-start gap-3">
-                  <span className="mt-1 inline-block w-2.5 h-2.5 rounded-full bg-[#FFFFFF]"></span>
-                  Same-day service in most areas
-                </li>
-              </ul>
+      <div className="relative max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center">
+        {/* LEFT SIDE */}
+        <div className="hidden lg:flex flex-col justify-center space-y-4">
+          <div>
+            <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight">
+              Reliable Home Services <br />
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Delivered On Time
+              </span>
+            </h1>
+
+            <p className="mt-5 text-gray-400 text-lg">
+              Connect with trusted professionals, manage bookings easily, and
+              track your services in real time — all in one secure platform.
+            </p>
+          </div>
+
+          <div className="space-y-4 text-gray-300">
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 mt-2 rounded-full bg-blue-500" />
+              Verified service professionals
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 mt-2 rounded-full bg-purple-500" />
+              Real-time booking & tracking
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 mt-2 rounded-full bg-indigo-500" />
+              Secure & seamless experience
             </div>
           </div>
 
-          {/* Right: Login Card */}
-        <Card className="bg-[#FFFFFF]/5 border-0 shadow-xl max-w-md w-full mx-auto">
-            <CardHeader className="space-y-1 p-4 sm:p-6"> 
-              
-              <CardTitle className="text-xl sm:text-2xl text-white text-center lg:text-left">
-                Sign in to your account  
-              </CardTitle>
-              <CardDescription className="text-white text-center lg:text-left text-sm sm:text-base">
-                Enter your credentials to continue
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <form
-                className="space-y-4 sm:space-y-6"
-                onSubmit={handleSubmit}
-                noValidate
-              >
-                {/* Email */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="email"
-                    className="text-white text-sm sm:text-base"
-                  >
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6C757D]" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-9 h-11 sm:h-12 rounded-xl border-2 border-gray-200 focus:border-[#007BFF] text-sm sm:text-base"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Password */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="password"
-                    className="text-white text-sm sm:text-base"
-                  >
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6C757D]" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-9 pr-10 h-11 sm:h-12 rounded-xl border-2 border-gray-200 focus:border-[#007BFF] text-sm sm:text-base"
-                      required
-                    />
-                    <button
-                      type="button"
-                      aria-label={
-                        showPassword ? "Hide password" : "Show password"
-                      }
-                      onClick={() => setShowPassword((s) => !s)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6C757D] hover:text-[#343A40] touch-manipulation"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Options */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
-                  <div className="flex items-center gap-2">
-                    <Checkbox id="remember" />
-                    <Label
-                      htmlFor="remember"
-                      className="text-white text-sm sm:text-base"
-                    >
-                      Remember me
-                    </Label>
-                  </div>
-                  <Link
-                    href="#"
-                    className="text-sm text-[#007BFF] hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-
-                {/* Messages */}
-                {error && (
-                  <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg p-3">
-                    {error}
-                  </div>
-                )}
-                {success && (
-                  <div className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-lg p-3">
-                    {success}
-                  </div>
-                )}
-
-                {/* Submit */}
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full h-11 sm:h-12 rounded-xl bg-[#007BFF] hover:bg-[#0067d6] text-sm sm:text-base font-medium"
-                  onClick={goToHomePage}
-                >
-                  {isSubmitting ? "Signing in..." : "Sign In"}
-                </Button>
-
-                {/* Or divider */}
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-gray-200" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="bg-white px-2 text-[#6C757D]">or</span>
-                  </div>
-                </div>
-
-                {/* Secondary actions */}
-                <MuiButton
-                  fullWidth
-                  variant="outlined"
-                  startIcon={<GoogleIcon />}
-                  onClick={async () => {
-                    signIn("google", { callbackUrl: "/" });
-                  }}
-                  sx={{
-                    color: "#cfd4dcff",
-                    fontWeight: "bold",
-                    borderColor: "#3607efff",
-                    backgroundColor: "#007bffda",
-                    text:"white",
-
-                    "&:hover": {
-                      borderColor: "#1035f0ff",
-                      backgroundColor: "#351ee3b3",
-                    },
-                  }}
-                >
-                  Sign in with Google
-                </MuiButton>
-                <div className="text-xs sm:text-sm text-[#cbd5e1]"> </div>
-                <div className="text-xs sm:text-sm text-[#cbd5e1]">
-                  Don{"'"}t have an account?{" "}
-                  <Link href="/createAccount" className="text-[#007BFF] hover:underline">
-                    Create account
-                  </Link>
-                </div>
-                <div className="text-center text-xs sm:text-sm text-[#6C757D] leading-relaxed">
-                  {" "}
-                </div>
-                <div className="text-center text-xs sm:text-sm text-[#6C757D] leading-relaxed">
-                  {" "}
-                </div>
-                <div className="text-center text-xs sm:text-sm text-[#6C757D] leading-relaxed">
-                  By continuing, you agree to our{" "}
-                  <Link href="#" className="text-[#007BFF] hover:underline">
-                    Terms
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="#" className="text-[#007BFF] hover:underline">
-                    Privacy Policy
-                  </Link>
-                  .
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+          <div className="relative pt-6">
+            <Image
+              src="/login-illustration.png"
+              width={200}
+              height={200}
+              alt="Service Platform Illustration"
+              className="relative w-[300px] xl:w-[500px] max-w-full opacity-95"
+              priority
+            />
+          </div>
         </div>
-      </section>
+
+        {/* RIGHT SIDE */}
+        <Card className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-3xl w-full max-w-md mx-auto">
+          <CardHeader className="space-y-6 p-6">
+            {/* Toggle */}
+            <div className="relative flex bg-[#0B1426] p-1 rounded-full overflow-hidden">
+              <span
+                className={`absolute top-1 bottom-1 w-1/2 rounded-full transition-all duration-300 ${
+                  activeTab === "user"
+                    ? "left-1 bg-[#007BFF]"
+                    : "left-[50%] bg-gradient-to-r from-blue-600 to-indigo-600"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setActiveTab("user")}
+                className="relative z-10 w-1/2 py-2 text-sm font-medium text-white"
+              >
+                User Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("pro")}
+                className="relative z-10 w-1/2 py-2 text-sm font-medium text-white"
+              >
+                Professional Login
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              {activeTab === "pro" && (
+                <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-blue-600/20 text-purple-400 border border-purple-500/30">
+                  <ShieldCheck size={14} />
+                  Service Provider Access
+                </div>
+              )}
+
+              <CardTitle className="text-2xl text-white">
+                {activeTab === "user"
+                  ? "Welcome Back"
+                  : "Professional Dashboard Login"}
+              </CardTitle>
+
+              <CardDescription className="text-gray-400">
+                {activeTab === "user"
+                  ? "Sign in to manage your bookings"
+                  : "Login to manage your services & clients"}
+              </CardDescription>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-6 pt-0">
+            <form className="space-y-5" onSubmit={handleLogin}>
+              {/* Email / Mobile */}
+              <div className="space-y-2">
+                <Label className="text-gray-300">Email</Label>
+
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+
+                  <Input
+                    type="email" // ✅ important
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                    placeholder="Enter your email"
+                    className="pl-9 h-12 rounded-xl bg-[#0B1426] border-[#1F2A44] text-white"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="space-y-2">
+                <Label className="text-gray-300">Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-9 pr-10 h-12 rounded-xl bg-[#0B1426] border-[#1F2A44] text-white"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((s) => !s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Forgot Password Link */}
+              <div className="flex justify-end -mt-2">
+                <Link
+                  href="/password/forget"
+                  className="text-xs text-blue-400 hover:text-blue-300 transition"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+
+              {error && <p className="text-red-400 text-sm">{error}</p>}
+
+              {/* Submit */}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full h-12 rounded-xl flex items-center justify-center ${
+                  activeTab === "user"
+                    ? "bg-[#007BFF] hover:bg-blue-600"
+                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90"
+                }`}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Signing in...
+                  </>
+                ) : activeTab === "user" ? (
+                  "Sign In"
+                ) : (
+                  "Access Dashboard"
+                )}
+              </Button>
+
+              {activeTab === "user" && (
+                <div className="flex items-center justify-center mt-4">
+                  <span className="mr-3 text-white font-medium">
+                    Sign in with
+                  </span>
+                  <GoogleAuthButton/>
+                </div>
+              )}
+
+              {/* Register Links */}
+              <div className="text-sm text-gray-400 text-center mt-4">
+                {activeTab === "user" ? (
+                  <>
+                    Don&apos;t have an account?{" "}
+                    <Link
+                      href="/login/CreateAccount"
+                      className="text-[#007BFF] hover:underline"
+                    >
+                      Create user account
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    Want to join as a professional?{" "}
+                    <Link
+                      href="/serviceproviderauthentication/register"
+                      className="text-purple-400 hover:underline"
+                    >
+                      Register as Service Provider
+                    </Link>
+                  </>
+                )}
+              </div>
+
+              {/* Legal Notice */}
+              <p className="text-xs text-gray-500 text-center mt-6">
+                By continuing, you agree to our{" "}
+                <Link
+                  href="/legal/terms"
+                  className="text-blue-400 hover:underline"
+                >
+                  Terms & Conditions
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/legal/privacy"
+                  className="text-blue-400 hover:underline"
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </p>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 }

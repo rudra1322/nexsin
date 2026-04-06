@@ -33,12 +33,12 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "/providerdashboard", icon: LayoutDashboard },
-  { name: "My Jobs", href: "/jobs", icon: Briefcase },
-  { name: "Earnings", href: "/earnings", icon: DollarSign },
-  { name: "My Services", href: "/services", icon: Wrench },
-  { name: "Availability", href: "/availability", icon: Calendar },
-  { name: "Reviews & Ratings", href: "/reviews", icon: Star },
-  { name: "Profile Settings", href: "/profile", icon: User },
+  { name: "My Jobs", href: "/providerdashboard/jobs", icon: Briefcase },
+  { name: "Earnings", href: "/providerdashboard/earnings", icon: DollarSign },
+  { name: "My Services", href: "/providerdashboard/services", icon: Wrench },
+  { name: "Availability", href: "/providerdashboard/availability", icon: Calendar },
+  { name: "Reviews & Ratings", href: "/providerdashboard/reviews", icon: Star },
+  { name: "Profile Settings", href: "/providerdashboard/profile", icon: User },
 ]
 
 /* ================= FAKE NOTIFICATIONS ================= */

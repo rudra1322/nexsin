@@ -10,8 +10,8 @@ const items: CardNavItem[] = [
     bgColor: "#0D0716",
     textColor: "#fff",
     links: [
-      { label: "Company", href: "/about", ariaLabel: "About Company" },
-      { label: "Careers", href: "/careers", ariaLabel: "About Careers" },
+      { label: "Company", href: "/information/about", ariaLabel: "About Company" },
+      { label: "Careers", href: "/information/careers", ariaLabel: "About Careers" },
     ],
   },
   {
@@ -38,7 +38,6 @@ const items: CardNavItem[] = [
     links: [
       { label: "Email", href: "/email", ariaLabel: "Email us" },
       { label: "Twitter", href: "/twitter", ariaLabel: "Twitter" },
-      { label: "LinkedIn", href: "/linkedin", ariaLabel: "LinkedIn" },
     ],
   },
 ];

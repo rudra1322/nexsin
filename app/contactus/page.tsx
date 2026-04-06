@@ -6,5 +6,9 @@ import ContactModal from "@/components/ui/ContactModal";
 export default function ContactPage() {
   const router = useRouter();
 
-  return <ContactModal onClose={() => router.push("/")} />;
+  return (
+    <ContactModal
+      onClose={() => router.back()}
+    />
+  );
 }
