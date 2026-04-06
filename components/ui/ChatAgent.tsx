@@ -21,8 +21,6 @@ export default function ChatAgent() {
   /* Greeting */
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([{ sender: "bot", text: "🤖 Hello! I’m your AI Assistant." }]);
-
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
@@ -39,7 +37,7 @@ export default function ChatAgent() {
         ]);
       }, 600);
     }
-  }, [isOpen]);
+  }, [isOpen, messages.length]);
 
   /* Auto scroll */
   useEffect(() => {
@@ -83,8 +81,10 @@ export default function ChatAgent() {
           whileTap={{ scale: 0.95 }}
         >
           <Image
-            src="/robot.png"
+            src="/nexcyn.png"
             alt="chat"
+            width={100}
+            height={100}
             className="w-20 h-20 drop-shadow-[0_0_12px_#00BFFF]"
           />
         </motion.button>

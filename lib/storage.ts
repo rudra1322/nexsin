@@ -41,7 +41,7 @@ export function updateApplicationStatus(id: string, status: ProviderApplication[
   }
 }
 
-export function saveCurrentApplication(data: any) {
+export function saveCurrentApplication(data: unknown) {
   localStorage.setItem(CURRENT_APPLICATION_KEY, JSON.stringify(data))
 }
 

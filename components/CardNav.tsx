@@ -9,9 +9,13 @@ import React, {
 } from "react";
 import { gsap } from "gsap";
 import { GoArrowUpRight } from "react-icons/go";
-import { FiSearch, FiMenu, FiX } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { User } from "@supabase/supabase-js";
+import Image from "next/image";
+import Slider from "./ui/sliderAvtar"; // Ensure this path is correct
+import { usePathname } from "next/navigation";
 
 export type CardNavLink = {
   label: string;
@@ -48,7 +52,10 @@ export interface CardNavProps {
   onSearch?: (query: string) => void;
   searchPlaceholder?: string;
   logo?: React.ReactNode;
+  profile?: React.ComponentType;
 }
+
+const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const CardNav: React.FC<CardNavProps> = ({
   items,
@@ -59,27 +66,46 @@ const CardNav: React.FC<CardNavProps> = ({
   showSearch = false,
   onSearch,
   searchPlaceholder = "Search...",
-  UploadAvatarComponent,
-  logo,
 }) => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isSearchFocused, setIsSearchFocused] = useState(false); // Flare Focus State
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [showSlider, setShowSlider] = useState(false);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname !== "/home") return;
+
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${API}/api/users/me`, {
+          credentials: "include",
+        });
+
+        setShowSlider(res.ok);
+      } catch {
+        setShowSlider(false);
+      }
+    };
+
+    checkAuth();
+  }, [pathname]);
 
   const navRef = useRef<HTMLDivElement | null>(null);
-  const cardsRef = useRef<(HTMLDivElement | undefined)[]>([]);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-  const navigate = useRouter();
-  const goToLoginPage = () => navigate.push("/login");
+  const router = useRouter();
+  const goToLoginPage = () => router.push("/login");
 
-  // Handle scroll effect and responsive detection
+  // Handle Scroll and Resize safely for Next.js (SSR)
   useEffect(() => {
     const handleScroll = () => {
-      // Logic for the Flare scroll transition - triggers after 40px of scroll
       setIsScrolled(window.scrollY > 40);
     };
 
@@ -87,9 +113,12 @@ const CardNav: React.FC<CardNavProps> = ({
       setIsMobile(window.innerWidth <= 768);
     };
 
+    // Initial check
+    handleResize();
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial check
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -125,9 +154,9 @@ const CardNav: React.FC<CardNavProps> = ({
   }, []);
 
   /** Create GSAP open/close timeline */
-  const createTimeline = useCallback(() => {
+  useLayoutEffect(() => {
     const navEl = navRef.current;
-    if (!navEl) return null;
+    if (!navEl) return;
 
     const visibleCards = cardsRef.current.filter(Boolean);
 
@@ -140,8 +169,7 @@ const CardNav: React.FC<CardNavProps> = ({
       overflow: "visible",
       duration: 0.3,
       ease: "power3.out",
-    });
-    tl.to(
+    }).to(
       visibleCards,
       {
         y: 0,
@@ -149,26 +177,22 @@ const CardNav: React.FC<CardNavProps> = ({
         duration: 0.2,
         stagger: 0.08,
         ease: "back.out(1.2)",
-      }, // Flare Bounce
+      },
       "-=0.15",
     );
 
-    return tl;
-  }, [calculateHeight]);
-
-  /** Fixed useLayoutEffect typing */
-  useLayoutEffect(() => {
-    const tl = createTimeline();
     tlRef.current = tl;
+
     return () => {
-      if (tl) tl.kill();
+      tl.kill();
     };
-  }, [createTimeline]);
+  }, [calculateHeight]);
 
   /** Toggle GSAP menu */
   const toggleMenu = () => {
     const tl = tlRef.current;
     if (!tl) return;
+
     if (!isExpanded) {
       setIsHamburgerOpen(true);
       setIsExpanded(true);
@@ -185,12 +209,9 @@ const CardNav: React.FC<CardNavProps> = ({
     onSearch?.(searchTerm);
   };
 
-  /** Correctly typed ref setter */
-  const setCardRef =
-    (i: number) =>
-    (el: HTMLDivElement | null): void => {
-      cardsRef.current[i] = el ?? undefined;
-    };
+  const setCardRef = (i: number) => (el: HTMLDivElement | null) => {
+    cardsRef.current[i] = el;
+  };
 
   // Styles object
   const styles = {
@@ -200,13 +221,11 @@ const CardNav: React.FC<CardNavProps> = ({
       left: 0,
       right: 0,
       zIndex: 1000,
-      // Transition from 0 padding (top of page) to floating padding
-      padding: isScrolled ? (isMobile ? "0.5rem" : "1.2rem") : "0rem",
+      padding: isScrolled ? (isMobile ? "0.5rem" : "0.4rem") : "0rem",
       pointerEvents: "none" as const,
       transition: "padding 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
     },
     container: {
-      // Transition from 100% width to floating pill width
       maxWidth: isScrolled ? "1100px" : "100%",
       margin: "0 auto",
       pointerEvents: "auto" as const,
@@ -214,28 +233,18 @@ const CardNav: React.FC<CardNavProps> = ({
       transform: isScrolled ? "translateY(0rem)" : "translateY(0)",
       width:
         isSearchFocused && !isMobile ? "100%" : isScrolled ? "94%" : "100%",
-      backgroundColor: "transparent", // Fixed typo and made always transparent
+      backgroundColor: "transparent",
     },
     nav: {
       position: "relative" as const,
-      // Combined and fixed the typo for backdropFilter
       backdropFilter: isScrolled ? "blur(20px) saturate(180%)" : "none",
       WebkitBackdropFilter: isScrolled ? "blur(20px) saturate(180%)" : "none",
-
-      // Background matches background when not scrolled
-      background: isScrolled ? "rgba(255, 255, 255, 0.12)" : "transparent",
-
-      // Transition from sharp edges to pill-shaped radius
+      background: isScrolled ? "rgba(255, 255, 255, 0.07)" : "transparent",
       borderRadius: isScrolled ? (isMobile ? "14px" : "50px") : "0px",
-
-      // Hide border when not scrolled to match background perfectly
       border: isScrolled
-        ? "1px solid rgba(255, 255, 255, 0.2)"
+        ? "1px solid rgba(255, 255, 255, 0.1)"
         : "1px solid transparent",
-
-      // Shadow only when scrolled (set alpha to 0.1 or 0.2 to actually see it)
       boxShadow: isScrolled ? "0 8px 32px rgba(0, 0, 0, 0.1)" : "none",
-
       overflow: "hidden",
       transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
       display: "flex",
@@ -243,76 +252,69 @@ const CardNav: React.FC<CardNavProps> = ({
       height: isExpanded ? undefined : "64px",
     },
     navOpen: {
-      boxShadow: "0 20px 40px rgba(0, 0, 0, 0)",
+      boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)",
     },
     topSection: {
       height: "64px",
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      padding: isScrolled ? "0 1.5rem" : "0 2.5rem",
+      padding: isScrolled ? "0 2rem" : "0 3rem",
       zIndex: 2,
       transition: "padding 0.4s ease",
     },
-    logoContainer: {
-      flex: isSearchFocused ? 0 : 1,
-      opacity: isSearchFocused ? 0 : 1,
-      display: isSearchFocused && !isMobile ? "none" : "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      transition: "all 0.3s ease",
-    },
-    logo: {
-      height: isMobile ? "26px" : "32px",
-      width: "auto",
-    },
-    defaultLogo: {
+    logoButton: {
       display: "flex",
       alignItems: "center",
-      gap: "0.5rem",
-      fontWeight: 700,
-      fontSize: "1.25rem",
-      color: "#fff",
-    },
-    logoIcon: {
-      fontSize: "1.5rem",
-      filter: "drop-shadow(0 0 10px rgba(99, 102, 241, 0.5))",
-    },
-    logoText: {
-      background: "linear-gradient(135deg, #fff 0%, #a5b4fc 100%)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      backgroundClip: "text",
-    },
-    hamburger: {
-      display: isSearchFocused ? "none" : "flex",
-      flexDirection: "column" as const,
       justifyContent: "center",
-      gap: "6px",
       cursor: "pointer",
-      zIndex: 2000,
-      transition: "0.2s ease",
-      padding: "8px",
     },
-    hamburgerLine: {
-      width: "28px",
-      height: "2px",
-      backgroundColor: "#fff",
-      transition: "transform 0.25s ease, opacity 0.2s ease",
-      transformOrigin: "center",
+    rightSection: {
+      display: "flex",
+      alignItems: "center",
+      gap: "1rem",
+      marginLeft: "auto",
+      flex: isSearchFocused ? 1 : "initial",
     },
-    hamburgerLineOpenFirst: {
-      transform: "translateY(6px) rotate(45deg)",
+    searchForm: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+      position: isSearchFocused ? ("absolute" as const) : ("relative" as const),
+      left: isSearchFocused ? "50%" : "auto",
+      transform: isSearchFocused ? "translateX(-50%)" : "none",
+      width: isSearchFocused ? "70%" : "200px",
+      maxWidth: isSearchFocused ? "70%" : "200px",
+      marginRight: isMobile ? "0" : "1rem",
+      zIndex: 10,
     },
-    hamburgerLineOpenLast: {
-      transform: "translateY(-6px) rotate(-45deg)",
+    searchInput: {
+      padding: "12px 18px 10px 40px",
+      borderRadius: "50px",
+      border: "1px solid rgba(255, 255, 255, 0.03)",
+      backgroundColor: isSearchFocused
+        ? "rgba(14, 14, 14, 0.19)"
+        : "rgba(213, 213, 213, 0.07)",
+      color: "#efeaea",
+      width: "100%",
+      fontSize: isMobile ? "13px" : "14px",
+      outline: "none",
+      transition: "all 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+      boxShadow: isSearchFocused ? "0 0 15px rgba(11, 126, 233, 0.8)" : "none",
+    },
+    navButtons: {
+      display: isSearchFocused ? "none" : "flex",
+      alignItems: "center",
+      gap: "0.7rem",
+      marginLeft: "0.3rem",
     },
     ctaButton: {
       backgroundColor: buttonBgColor,
       color: buttonTextColor,
       border: "none",
-      borderRadius: "0.5rem",
-      padding: isMobile ? "0 0.75rem" : "0 1rem",
+      borderRadius: "0.6rem",
+      padding: isMobile ? "0 0.7rem" : "0 1rem",
       height: isMobile ? "42px" : "50px",
       fontWeight: 500,
       cursor: "pointer",
@@ -321,6 +323,15 @@ const CardNav: React.FC<CardNavProps> = ({
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
+    },
+    sliderSection: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginLeft: "auto",
+      width: "100px",
+      height: "50px",
+      position: "relative" as const,
     },
     content: {
       position: "absolute" as const,
@@ -338,7 +349,7 @@ const CardNav: React.FC<CardNavProps> = ({
       transform: isExpanded ? "translateY(0)" : "translateY(-10px)",
       pointerEvents: isExpanded ? ("auto" as const) : ("none" as const),
       transition: "all 0.3s ease",
-      background: isMobile ? "rgba(0, 0, 0, 0.6)" : "transparent",
+      background: isMobile ? "rgba(0, 0, 0, 0.88)" : "transparent",
       borderRadius: isMobile ? "0 0 12px 12px" : "0",
       flexDirection: isMobile ? ("column" as const) : ("row" as const),
     },
@@ -357,14 +368,10 @@ const CardNav: React.FC<CardNavProps> = ({
       boxShadow: "0 4px 16px rgba(0, 0, 0, 0.05)",
       transition: "transform 0.25s ease, background 0.25s ease",
     },
-    cardHover: {
-      transform: "translateY(-3px)",
-      background: "rgba(255, 255, 255, 0.15)",
-    },
     cardLabel: {
       fontWeight: 600,
       fontSize: isMobile ? "16px" : "18px",
-      color: "#fff",
+      color: "#201818",
     },
     cardLinks: {
       marginTop: "auto",
@@ -375,55 +382,13 @@ const CardNav: React.FC<CardNavProps> = ({
     cardLink: {
       fontSize: isMobile ? "14px" : "15px",
       textDecoration: "none",
-      color: "#ddd",
+      color: "#1134df",
       display: "inline-flex",
       alignItems: "center",
       gap: "6px",
       transition: "opacity 0.25s ease, transform 0.25s ease",
       padding: "4px",
       borderRadius: "4px",
-    },
-    searchForm: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-      flex: isSearchFocused ? "1" : "0 1 200px",
-      maxWidth: isSearchFocused ? "100%" : "200px",
-      marginRight: isMobile ? "0" : "1rem",
-    },
-    searchInput: {
-      padding: "10px 18px 10px 40px",
-      borderRadius: "50px",
-      border: "1px solid rgba(255, 255, 255, 0.2)",
-      backgroundColor: isSearchFocused
-        ? "rgba(255, 255, 255, 0.15)"
-        : "rgba(255, 255, 255, 0.08)",
-      color: "#fff",
-      width: "100%",
-      fontSize: isMobile ? "13px" : "14px",
-      outline: "none",
-      transition: "all 0.3s ease",
-      boxShadow: isSearchFocused ? "0 0 15px rgba(59, 130, 246, 0.3)" : "none",
-    },
-    navButtons: {
-      display: isSearchFocused ? "none" : "flex",
-      alignItems: "center",
-      gap: "0.75rem",
-      marginLeft: "0.5rem",
-    },
-    avatarWrapper: {
-      pointerEvents: "auto" as const,
-      position: "relative" as const,
-      zIndex: 1000,
-      marginLeft: "0.5rem",
-    },
-    rightSection: {
-      display: "flex",
-      alignItems: "center",
-      gap: "1rem",
-      marginLeft: "auto",
-      flex: isSearchFocused ? 1 : "initial",
     },
   };
 
@@ -438,41 +403,25 @@ const CardNav: React.FC<CardNavProps> = ({
           }}
         >
           <div style={styles.topSection}>
-            {/* Hamburger */}
+            {/* Logo / Menu Toggle */}
             <div
-              style={styles.hamburger}
+              style={styles.logoButton}
               onClick={toggleMenu}
               role="button"
               aria-label={isExpanded ? "Close menu" : "Open menu"}
               tabIndex={0}
             >
-              <div
-                style={{
-                  ...styles.hamburgerLine,
-                  ...(isHamburgerOpen ? styles.hamburgerLineOpenFirst : {}),
-                }}
-              />
-              <div
-                style={{
-                  ...styles.hamburgerLine,
-                  ...(isHamburgerOpen ? styles.hamburgerLineOpenLast : {}),
-                }}
+              <Image
+                src="/nexcyn.png"
+                alt="Company Logo"
+                width={50}
+                height={50}
+                priority
               />
             </div>
 
-            {/* Logo */}
-            <div style={styles.logoContainer}>
-              {logo || (
-                <div style={styles.defaultLogo}>
-                  <span style={styles.logoIcon}>⚡</span>
-                  <span style={styles.logoText}>Flare</span>
-                </div>
-              )}
-            </div>
-
-            {/* Right Section */}
+            {/* Right Section containing Search and Action Buttons */}
             <div style={styles.rightSection}>
-              {/* Search */}
               {showSearch && (
                 <form style={styles.searchForm} onSubmit={handleSearchSubmit}>
                   <div style={{ position: "relative", width: "100%" }}>
@@ -482,7 +431,7 @@ const CardNav: React.FC<CardNavProps> = ({
                         left: "15px",
                         top: "50%",
                         transform: "translateY(-50%)",
-                        color: isSearchFocused ? "#3b82f6" : "#fff",
+                        color: isSearchFocused ? "#0062ff" : "#fff",
                         transition: "0.3s",
                       }}
                     />
@@ -499,35 +448,36 @@ const CardNav: React.FC<CardNavProps> = ({
                 </form>
               )}
 
-              {/* Buttons */}
               <div style={styles.navButtons}>
-                {navButtons.map((btn, i) => (
-                  <button
-                    key={i}
-                    onClick={btn.onClick || goToLoginPage}
-                    style={styles.ctaButton}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#333";
-                      e.currentTarget.style.transform = "scale(1.05)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = buttonBgColor;
-                      e.currentTarget.style.transform = "scale(1)";
-                    }}
-                  >
-                    {btn.label}
-                  </button>
-                ))}
+                {!user &&
+                  navButtons.map((btn, i) => (
+                    <button
+                      key={i}
+                      onClick={btn.onClick || goToLoginPage}
+                      style={styles.ctaButton}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#05e946";
+                        e.currentTarget.style.transform = "scale(1.05)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = buttonBgColor;
+                        e.currentTarget.style.transform = "scale(1)";
+                      }}
+                    >
+                      {btn.label}
+                    </button>
+                  ))}
               </div>
-
-              {/* Avatar */}
-              {UploadAvatarComponent && (
-                <div style={styles.avatarWrapper}>{UploadAvatarComponent}</div>
+              {/* Slider Rendering inside the nav bounds */}
+              {showSlider && (
+                <div style={styles.sliderSection}>
+                  <Slider />
+                </div>
               )}
             </div>
           </div>
 
-          {/* Cards Content */}
+          {/* Expanded Mega-Menu Cards */}
           <div
             className="card-nav-content"
             style={styles.content}

@@ -1,8 +1,8 @@
 "use client";
 
 import type React from "react";
-import { supabase } from "@/lib/supabase";
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,75 +16,68 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  Loader2,
-  ShieldCheck,
-
-  Phone,
-
-} from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Loader2, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 
+import GoogleAuthButton from "@/lib/google";
 
-
-
-
-
-
-
+const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function LoginPage() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<"user" | "pro">("user");
-  const [email, setEmail] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
- 
+
   const [error, setError] = useState<string | null>(null);
 
 
-  /* SESSION CHECK */
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) router.replace("/home");
-    };
-    checkSession();
-  }, [router]);
-
-  /* LOGIN */
-
+  /* EMAIL/PASSWORD LOGIN */
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
 
     try {
+      setIsSubmitting(true);
 
-      // Replace with your real backend login
-      router.replace(activeTab === "pro" ? "/pro/home" : "/home");
+      const res = await fetch(`${API}/api/users/login`, {
+        method: "POST",
+        credentials: "include", // 🔥 important
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: identifier, password }),
+      });
 
-      await new Promise((res) => setTimeout(res, 1200));
-      router.replace(activeTab === "pro" ? "/providerdashboard" : "/home");
-    } catch {
-      setError("Invalid credentials");
+      let data;
+
+      try {
+        data = await res.json();
+      } catch {
+        const text = await res.text();
+        throw new Error(text || "Invalid server response");
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      router.push("/home");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+        setError(err.message);
+      } else {
+        console.error("Something went wrong");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-
     <main className="relative min-h-screen bg-[#0B1426] flex items-center justify-center px-4 overflow-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
@@ -103,8 +96,8 @@ export default function LoginPage() {
             </h1>
 
             <p className="mt-5 text-gray-400 text-lg">
-              Connect with trusted professionals, manage bookings easily,
-              and track your services in real time — all in one secure platform.
+              Connect with trusted professionals, manage bookings easily, and
+              track your services in real time — all in one secure platform.
             </p>
           </div>
 
@@ -130,6 +123,7 @@ export default function LoginPage() {
               height={200}
               alt="Service Platform Illustration"
               className="relative w-[300px] xl:w-[500px] max-w-full opacity-95"
+              priority
             />
           </div>
         </div>
@@ -188,19 +182,16 @@ export default function LoginPage() {
             <form className="space-y-5" onSubmit={handleLogin}>
               {/* Email / Mobile */}
               <div className="space-y-2">
-                <Label className="text-gray-300">
-                  Email or Mobile Number
-                </Label>
+                <Label className="text-gray-300">Email</Label>
+
                 <div className="relative">
-                  {identifier.includes("@") ? (
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  ) : (
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  )}
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+
                   <Input
-                    type="text"
+                    type="email" // ✅ important
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
+                    placeholder="Enter your email"
                     className="pl-9 h-12 rounded-xl bg-[#0B1426] border-[#1F2A44] text-white"
                     required
                   />
@@ -229,7 +220,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* 🔥 Forgot Password Link Added */}
+              {/* Forgot Password Link */}
               <div className="flex justify-end -mt-2">
                 <Link
                   href="/password/forget"
@@ -239,9 +230,7 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              {error && (
-                <p className="text-red-400 text-sm">{error}</p>
-              )}
+              {error && <p className="text-red-400 text-sm">{error}</p>}
 
               {/* Submit */}
               <Button
@@ -265,13 +254,22 @@ export default function LoginPage() {
                 )}
               </Button>
 
+              {activeTab === "user" && (
+                <div className="flex items-center justify-center mt-4">
+                  <span className="mr-3 text-white font-medium">
+                    Sign in with
+                  </span>
+                  <GoogleAuthButton/>
+                </div>
+              )}
+
               {/* Register Links */}
               <div className="text-sm text-gray-400 text-center mt-4">
                 {activeTab === "user" ? (
                   <>
                     Don&apos;t have an account?{" "}
                     <Link
-                      href="/CreateAccount"
+                      href="/login/CreateAccount"
                       className="text-[#007BFF] hover:underline"
                     >
                       Create user account
@@ -305,13 +303,13 @@ export default function LoginPage() {
                   className="text-blue-400 hover:underline"
                 >
                   Privacy Policy
-                </Link>.
+                </Link>
+                .
               </p>
             </form>
           </CardContent>
         </Card>
       </div>
-
     </main>
   );
 }

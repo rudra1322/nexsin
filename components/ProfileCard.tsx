@@ -9,7 +9,7 @@ interface ProfileModalProps {
   setAvatarSrc: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const defaultAvatar = "/defaultcharacter.png";
+const defaultAvatar = "/nexcyn.png";
 
 const ProfileCardModal: React.FC<ProfileModalProps> = ({
   onClose,

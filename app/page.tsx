@@ -1,19 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
+
 import { Badge } from "@/components/ui/badge";
 import {
   Search,
   Wrench,
-  Laptop,
-  Car,
-  Droplets,
-  Zap,
-  Snowflake,
-  Hammer,
-  Paintbrush,
+
   Shield,
   Clock,
   Star,
@@ -23,18 +17,19 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Menu,
-  X,
+
+
 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+
+
 import Image from "next/image";
 import CardNav, { CardNavItem } from "@/components/CardNav";
+import ServicesSection from "@/components/services/ServicesSection";
+import ReviewForm from "@/components/reviews/ReviewForm";
+import TopReviews from "@/components/reviews/TopReviews";
 
 export default function HomePage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navigate = useRouter();
+
 
   const services = [
     {
@@ -42,30 +37,24 @@ export default function HomePage() {
       image: "/cooler.png",
       description: "AC & Cooler maintenance",
       duration: "1-2 hrs",
-      price: "₹249",
-      // rating: "4.6",
       reviews: "11,234",
-      popular: false,
+      popular: true,
     },
     {
       name: "Laptop Repair",
       image: "/laptop.png",
       description: "Computer & laptop fixes",
       duration: "1-2 hrs",
-      price: "₹249",
-      // rating: "4.6",
       reviews: "11,234",
-      popular: false,
+      popular: true,
     },
     {
       name: "Car Mechanic",
       image: "/car.jpg",
       description: "Auto repair services",
       duration: "1-2 hrs",
-      price: "₹249",
-      // rating: "4.6",
       reviews: "11,234",
-      popular: false,
+      popular: true,
     },
     {
       name: "Plumbing Services",
@@ -73,50 +62,24 @@ export default function HomePage() {
       description:
         "Expert plumber for leaks, installations, and drain cleaning",
       duration: "1-2 hrs",
-      price: "₹249",
-      // rating: "4.6",
       reviews: "11,234",
-      popular: false,
+      popular: true,
     },
     {
       name: "Electrician Services",
       image: "/electrician.png",
       description: "Licensed electrician for wiring and electrical repairs",
       duration: "1-2 hrs",
-      price: "₹199",
-      // rating: "4.7",
       reviews: "9,876",
-      popular: false,
+      popular: true,
     },
     {
       name: "AC Service & Repair",
       image: "/ac.png",
       description: "Complete AC maintenance, repair, and installation services",
       duration: "1-2 hrs",
-      price: "₹349",
-      // rating: "4.8",
       reviews: "7,845",
       popular: true,
-    },
-    {
-      name: "Carpenter",
-      image: "/carpenter.png",
-      description: "Wood work & furniture",
-      duration: "1-2 hrs",
-      price: "₹349",
-      // rating: "4.8",
-      reviews: "7,845",
-      popular: true,
-    },
-    {
-      name: "Painter",
-      image: "/penter.png",
-      description: "Interior & exterior painting",
-      duration: "1-2 hrs",
-      price: "₹249",
-      // rating: "4.6",
-      reviews: "11,234",
-      popular: false,
     },
   ];
 
@@ -179,20 +142,9 @@ export default function HomePage() {
       links: [
         { label: "Email", href: "/email", ariaLabel: "Email us" },
         { label: "Twitter", href: "/twitter", ariaLabel: "Twitter" },
-        { label: "LinkedIn", href: "/linkedin", ariaLabel: "LinkedIn" },
       ],
     },
   ];
-
-  function slugify(name: string) {
-    return name
-      .toLowerCase()
-      .replace(/&/g, "and")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-  }
-
-  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-[#0F172A]">
@@ -203,32 +155,18 @@ export default function HomePage() {
             items={items}
             baseColor="rgba(235, 222, 222, 0.05)"
             menuColor="#0e0c0cff"
-            buttonBgColor="#111"
+            buttonBgColor="#3e0fb6"
             buttonTextColor="#fff"
             ease="power3.out"
             showSearch={true}
             onSearch={(query) => console.log("Search for:", query)}
             navButtons={[
               {
-                label: "STARTED",
-                href: "/login",
-                bgColor: "#832386ff",
+                label: "GET START",
+                bgColor: "rgb(8, 76, 248)",
               },
             ]}
           />
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 rounded-lg text-white hover:bg-[#1e40af] transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
         </div>
 
         {/* Mobile Navigation */}
@@ -257,19 +195,9 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
-                  <Input
-                    placeholder="What service do you need?"
-                    className="pl-9 sm:pl-10 h-11 sm:h-12 text-base sm:text-lg rounded-xl border-2 border-gray-200 focus:border-[#007BFF] bg-white"
-                  />
+
                 </div>
 
-                <Button
-                  size="lg"
-                  className="h-11 sm:h-12 px-6 sm:px-8 rounded-xl bg-blue-600 hover:bg-blue-700 text-sm sm:text-base"
-                >
-                  Find Services
-                </Button>
               </div>
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-xs sm:text-sm text-[#cbd5e1]">
                 <div className="flex items-center space-x-1">
@@ -298,6 +226,7 @@ export default function HomePage() {
                   width={800}
                   height={600}
                   className="w-full h-60 sm:h-72 lg:h-80 object-cover rounded-xl"
+                  loading="eager"
                 />
               </div>
               <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 bg-blue-600 text-white p-3 sm:p-4 rounded-xl shadow-lg">
@@ -323,82 +252,7 @@ export default function HomePage() {
               office needs
             </p>
           </div>
-
-          {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className="group relative w-full max-w-xs rounded-2xl overflow-hidden 
-             shadow-xl hover:shadow-2xl transition-all duration-500 
-             hover:-translate-y-3 cursor-pointer"
-              >
-                {/* IMAGE SECTION (75%) */}
-                <div className="relative h-[380px] ">
-                  {/* Image */}
-                  <Image
-                    src={service.image}
-                    alt={service.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-
-                  {/* Dark Overlay */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-t 
-                    from-black/90 via-black/50 to-transparent"
-                  />
-
-                  {/* TOP CONTENT OVER IMAGE */}
-                  <div className="absolute bottom-0 p-6 text-white w-full">
-                    {/* Rating */}
-                    <div className="flex justify-between items-center mb-3">
-                      {/* {service.popular && (
-                        <span className="bg-blue-600 text-xs px-3 py-1 rounded-full">
-                          Popular
-                        </span>
-                      )} */}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-xl font-semibold mb-2">
-                      {service.name}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-200 mb-4 line-clamp-2">
-                      {service.description}
-                    </p>
-
-                    {/* Duration + Verified */}
-                    <div className="flex items-center text-sm text-gray-300 mb-3">
-                      <Clock className="h-4 w-4 mr-1" />
-                      {service.duration}
-                      <span className="mx-2">•</span>
-                      <Shield className="h-4 w-4 mr-1 text-green-400" />
-                      Verified
-                    </div>
-
-                    {/* Price + Button */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs text-gray-300">Starting from</p>
-                        <p className="text-xl font-bold">{service.price}</p>
-                      </div>
-
-                      <button
-                        className="bg-blue-600 hover:bg-blue-700 
-                           px-4 py-2 rounded-lg text-sm 
-                           transition-all duration-300"
-                      >
-                        Book Now →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <ServicesSection services={services} />
         </div>
       </section>
 
@@ -505,143 +359,29 @@ export default function HomePage() {
       </section>
 
       {/* Customer Testimonials */}
+
+
+      {/* Review Submission Section - Simplified for mobile */}
       <section className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Share Your Experience
+            </h2>
+            <p className="text-lg sm:text-xl text-[#cbd5e1]">
+              Help others by sharing your experience with FixMate services
+            </p>
+          </div>
+
+         <ReviewForm />
+        </div>
+      </section>
+            <section className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              What Our Customers Say
-            </h2>
-            <p className="text-lg sm:text-xl text-[#cbd5e1] max-w-2xl mx-auto">
-              Do npt just take our word for it - hear from thousands of
-              satisfied customers
-            </p>
-            <div className="flex flex-wrap items-center justify-center mt-4 sm:mt-6 gap-2">
-              <div className="flex space-x-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-400 fill-current"
-                  />
-                ))}
-              </div>
-              <span className="text-xl sm:text-2xl font-bold text-white ml-2 sm:ml-3">
-                4.8
-              </span>
-              <span className="text-[#cbd5e1] text-sm sm:text-base">
-                out of 5 (2,847 reviews)
-              </span>
-            </div>
+
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {/* Testimonial Cards - keeping original content but with better mobile spacing */}
-            {[
-              {
-                name: "Sarah Johnson",
-                role: "Homeowner",
-
-                review:
-                  "Amazing service! The plumber arrived exactly on time and fixed our kitchen sink issue in under an hour. Professional, clean, and reasonably priced.",
-                service: "Plumbing Service",
-                icon: Droplets,
-                iconColor: "text-[#00BCD4]",
-              },
-              {
-                name: "Mike Chen",
-                role: "Business Owner",
-
-                review:
-                  "My laptop was completely dead, but the technician brought it back to life! Quick diagnosis, fair pricing, and excellent communication throughout.",
-                service: "Laptop Repair",
-                icon: Laptop,
-                iconColor: "text-[#9C27B0]",
-              },
-              {
-                name: "Emily Rodriguez",
-                role: "Apartment Renter",
-
-                review:
-                  "The electrician was incredibly knowledgeable and solved our power outlet issues safely. I'll definitely use FixMate again for future repairs.",
-                service: "Electrical Service",
-                icon: Zap,
-                iconColor: "text-[#FF9800]",
-              },
-              {
-                name: "Robert Williams",
-                role: "Retiree",
-
-                review:
-                  "Our AC broke down during a heatwave. FixMate got someone out the same day and had us cool again within 2 hours. Lifesavers!",
-                service: "AC Repair",
-                icon: Snowflake,
-                iconColor: "text-[#3F51B5]",
-              },
-              {
-                name: "Jessica Park",
-                role: "Marketing Manager",
-
-                review:
-                  "The carpenter did an amazing job fixing our kitchen cabinets. Attention to detail was perfect and the pricing was very transparent.",
-                service: "Carpentry",
-                icon: Hammer,
-                iconColor: "text-[#FF5722]",
-              },
-              {
-                name: "David Kumar",
-                role: "Software Engineer",
-
-                review:
-                  "Needed my car serviced urgently before a road trip. The mechanic was thorough, honest about what needed fixing, and got me back on the road safely.",
-                service: "Auto Repair",
-                icon: Car,
-                iconColor: "text-[#F44336]",
-              },
-            ].map((testimonial, index) => (
-              <Card
-                key={index}
-                className="bg-[#FFFFFF] border-0 shadow-lg hover:shadow-xl transition-shadow duration-300"
-              >
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex items-center mb-3 sm:mb-4">
-                    <Image
-                      src="/placeholder.svg"
-                      alt={testimonial.name}
-                      width={48}
-                      height={460}
-                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover mr-3 sm:mr-4"
-                    />
-                    <div>
-                      <h4 className="font-semibold text-[#343A40] text-sm sm:text-base">
-                        {testimonial.name}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-[#6C757D]">
-                        {testimonial.role}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex space-x-1 mb-2 sm:mb-3">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 fill-current"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-[#6C757D] mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">
-                    {testimonial.review}
-                  </p>
-                  <div className="flex items-center text-xs sm:text-sm">
-                    <testimonial.icon
-                      className={`h-3 w-3 sm:h-4 sm:w-4 ${testimonial.iconColor} mr-2`}
-                    />
-                    <span className="text-[#007BFF] font-medium">
-                      {testimonial.service}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+         <TopReviews />
 
           {/* Trust Indicators */}
           <div className="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 text-center">
@@ -682,160 +422,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Review Submission Section - Simplified for mobile */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-[#0F172A]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Share Your Experience
-            </h2>
-            <p className="text-lg sm:text-xl text-[#cbd5e1]">
-              Help others by sharing your experience with FixMate services
-            </p>
-          </div>
-
-          <Card className="bg-[#F5F9FF] border-0 shadow-xl">
-            <CardContent className="p-4 sm:p-6 lg:p-8">
-              <form className="space-y-4 sm:space-y-6">
-                {/* Simplified form for mobile - keeping key fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  <div>
-                    <label
-                      htmlFor="customerName"
-                      className="block text-sm font-medium text-[#343A40] mb-2"
-                    >
-                      Your Name *
-                    </label>
-                    <Input
-                      id="customerName"
-                      placeholder="Enter your full name"
-                      className="h-11 sm:h-12 border-2 border-gray-200 focus:border-[#007BFF] rounded-xl text-sm sm:text-base"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="customerEmail"
-                      className="block text-sm font-medium text-[#343A40] mb-2"
-                    >
-                      Email Address *
-                    </label>
-                    <Input
-                      id="customerEmail"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      className="h-11 sm:h-12 border-2 border-gray-200 focus:border-[#007BFF] rounded-xl text-sm sm:text-base"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="serviceType"
-                    className="block text-sm font-medium text-[#343A40] mb-2"
-                  >
-                    Service Used *
-                  </label>
-                  <select
-                    id="serviceType"
-                    className="w-full h-11 sm:h-12 border-2 border-gray-200 focus:border-[#007BFF] rounded-xl px-4 bg-white text-sm sm:text-base"
-                    required
-                  >
-                    <option value="">Select the service you used</option>
-                    <option value="plumbing">Plumbing</option>
-                    <option value="electrical">Electrical</option>
-                    <option value="ac-repair">AC Repair</option>
-                    <option value="laptop-repair">Laptop Repair</option>
-                    <option value="car-mechanic">Car Mechanic</option>
-                    <option value="carpentry">Carpentry</option>
-                    <option value="painting">Painting</option>
-                    <option value="cooler-repair">Cooler Repair</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#343A40] mb-3">
-                    Overall Rating *
-                  </label>
-                  <div className="flex items-center justify-center sm:justify-start space-x-2">
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <button
-                        key={rating}
-                        type="button"
-                        className="group focus:outline-none touch-manipulation"
-                        onClick={() => {
-                          const stars =
-                            document.querySelectorAll(".rating-star");
-                          stars.forEach((star, index) => {
-                            if (index < rating) {
-                              star.classList.add(
-                                "text-yellow-400",
-                                "fill-current",
-                              );
-                              star.classList.remove("text-gray-300");
-                            } else {
-                              star.classList.remove(
-                                "text-yellow-400",
-                                "fill-current",
-                              );
-                              star.classList.add("text-gray-300");
-                            }
-                          });
-                        }}
-                      >
-                        <Star className="rating-star h-7 w-7 sm:h-8 sm:w-8 text-gray-300 hover:text-yellow-400 transition-colors duration-200" />
-                      </button>
-                    ))}
-                    <span className="ml-2 sm:ml-4 text-xs sm:text-sm text-[#6C757D]">
-                      Tap to rate
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="reviewText"
-                    className="block text-sm font-medium text-[#343A40] mb-2"
-                  >
-                    Your Review *
-                  </label>
-                  <textarea
-                    id="reviewText"
-                    rows={4}
-                    placeholder="Tell us about your experience with our service. What went well? What could be improved?"
-                    className="w-full border-2 border-gray-200 focus:border-[#007BFF] rounded-xl p-3 sm:p-4 resize-none text-sm sm:text-base"
-                    required
-                  ></textarea>
-                  <p className="text-xs sm:text-sm text-[#6C757D] mt-2">
-                    Minimum 50 characters
-                  </p>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="h-11 sm:h-12 px-6 sm:px-8 border-2 border-[#007BFF] text-[#007BFF] hover:bg-[#007BFF] hover:text-white rounded-xl bg-transparent text-sm sm:text-base"
-                  >
-                    Submit Review
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="lg"
-                    className="h-11 sm:h-12 px-6 sm:px-8 border-2 border-[#007BFF] text-[#007BFF] hover:bg-[#007BFF] hover:text-white rounded-xl bg-transparent text-sm sm:text-base"
-                  >
-                    Preview
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
         </div>
       </section>
 

@@ -1,34 +1,25 @@
 "use client";
 
 import * as React from "react";
-
-
-
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
-import ProfilePage from "@/components/ProfilePage";
-
-
-
-
-
+import ProfilePage from "@/app/home/sections/ProfilePage";
 
 
 export default function UploadAvatars() {
   const [open, setOpen] = React.useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
-  const router = useRouter();
 
   const handleClose = () => setOpen(false);
 
-  const logout = () => {
+  // ✅ FIXED LOGOUT FUNCTION
+  const logout = async () => {
     setOpen(false);
-    router.push("/login");
+
   };
 
-  // ✅ IMPORTANT: COMPONENT RETURNS JSX
   return (
     <>
+      {/* OPEN MENU BUTTON */}
       <div
         onClick={() => setOpen(true)}
         className="text-white cursor-pointer"
@@ -36,15 +27,25 @@ export default function UploadAvatars() {
         Open Menu
       </div>
 
+      {/* MENU MODAL */}
       {open &&
         createPortal(
-          <div className="fixed inset-0 bg-black text-white">
+          <div className="fixed inset-0 bg-black text-white flex flex-col items-center justify-center gap-4">
             <button onClick={handleClose}>Close</button>
+
+            <button onClick={() => {
+              setIsProfileModalOpen(true);
+              setOpen(false);
+            }}>
+              Profile
+            </button>
+
             <button onClick={logout}>Logout</button>
           </div>,
           document.body
         )}
 
+      {/* PROFILE MODAL */}
       {isProfileModalOpen &&
         createPortal(
           <ProfilePage onClose={() => setIsProfileModalOpen(false)} />,
